@@ -36,7 +36,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="w-full h-full text-[#fff]">
-      <Viewer setPosition={setPosition} setTarget={setTarget} />
+      {/* <Viewer setPosition={setPosition} setTarget={setTarget} /> */}
       <div className="absolute top-[5%] left-[3%] w-[50%] flex items-center gap-[2%] max-md:w-full max-md:top-[2%] max-md:left-[0%] max-md:justify-center max-md:gap-[5%]">
         <button className="w-[50px] h-[50px] bg-none border-none cursor-pointer flex items-center justify-center bg-cbutton shadow-[0_2px_6px_rgba(0,0,0,0.952)] rounded-[4px] transition-shadow duration-300 ease z-[1000] hover:bg-cwhite focus:bg-cwhite " onClick={toggleMenu}>
           <Image src={ConfigIconIcon} alt="Config Icon" className="button-icon" width={40} height={40} />
