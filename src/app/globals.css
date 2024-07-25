@@ -115,3 +115,14 @@ th {
   transition: filter 1s ease-out;
   background: transparent; /* Transition to transparent background */
 }
+
+#loading-cover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: black;
+  color: white;
+  text-align: center;
+  padding: 25%;
+  z-index: 10;
+}

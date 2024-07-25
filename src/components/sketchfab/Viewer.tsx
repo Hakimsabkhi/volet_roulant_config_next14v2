@@ -6,6 +6,7 @@ import TextureUpdater from './TextureUpdater';
 import APIDataFetcher from './APIDataFetcher';
 import useScript from '../../hooks/useScript';
 import { ViewerProps } from "../../interfaces";
+import LoadingScreen from '../LoadingScreen';
 
 const Viewer: React.FC<ViewerProps> = ({ setPosition, setTarget }) => {
   const [coulisseTexture, setCoulisseTexture] = useState("33b7f13018224606a347dc752a5bf9e5");
@@ -15,6 +16,7 @@ const Viewer: React.FC<ViewerProps> = ({ setPosition, setTarget }) => {
   const poseInstalled = useSelector(selectposeInstalled);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const apiClientRef = useRef<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const scriptLoaded = useScript('https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js', () => {
     console.log('Sketchfab API script loaded');
@@ -75,9 +77,15 @@ const Viewer: React.FC<ViewerProps> = ({ setPosition, setTarget }) => {
             if (!err) console.log('Node 97 is initially shown');
             else console.error('Failed to show node 97:', err);
           });
+
+          // Hide the loading cover after 2 seconds
+          window.setTimeout(() => {
+            setIsLoading(false);
+          }, 2000);
         });
       },
       error: () => console.error('Sketchfab API failed to initialize'),
+      preload: 1,
       autostart: 1,
       camera: 0,
       ui_animations: 0,
@@ -135,12 +143,12 @@ const Viewer: React.FC<ViewerProps> = ({ setPosition, setTarget }) => {
 
   return (
     <div className="absolute w-full h-full">
+      {isLoading && <LoadingScreen />}
       <iframe
         id="sketchfab-viewer"
         ref={iframeRef}
         className='w-full h-full'
         sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-        src="/api/sketchfab-proxy?model_uid=231bc663e779447faddce738c2d66fde"
         xr-spatial-tracking="false"
         execution-while-out-of-viewport="true"
         execution-while-not-rendered="true"
