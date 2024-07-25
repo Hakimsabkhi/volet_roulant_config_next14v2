@@ -137,6 +137,14 @@ const Viewer: React.FC<ViewerProps> = ({ setPosition, setTarget }) => {
     <div className="absolute w-full h-full">
       <iframe
         id="sketchfab-viewer"
+        ref={iframeRef}
+        className='w-full h-full'
+        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+        src="/api/sketchfab-proxy?model_uid=231bc663e779447faddce738c2d66fde"
+        xr-spatial-tracking="false"
+        execution-while-out-of-viewport="true"
+        execution-while-not-rendered="true"
+        web-share="true"
       ></iframe>
       <OverlayButtons
         handleViewChange={handleViewChange}
