@@ -6,21 +6,29 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:css": "postcss src/styles.css -o dist/styles.css"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.2.6",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
+    "next": "14.2.5",
+    "node-fetch": "^3.3.2",
+    "nookies": "^2.5.2",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.5"
+    "react-redux": "^9.1.2"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@types/json5": "^2.2.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.5",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.5"
+    "typescript": "^5"
   }
 }
