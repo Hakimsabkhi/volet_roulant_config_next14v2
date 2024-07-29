@@ -119,8 +119,8 @@ const MultiStepMenu: React.FC<MultiStepMenuProps> = ({
         />
       </div>
       <div className="WindowConfig max-md:p-[5px] max-md:min-h-[200px]">
-        <div className="w-full flex flex-col gap-[5px]">
-          <h2 className="text-base uppercase font-semibold">{steps.find((step) => step.id === currentStep)?.title}</h2>
+      <h2 className="text-base uppercase font-semibold">{steps.find((step) => step.id === currentStep)?.title}</h2>
+        <div className="w-full flex flex-col gap-[5px] max-md:min-h-[100px] ">
           {renderCurrentStep()}
         </div>
         <div className="w-full flex gap-[10px] max-md:text-[2px]">
@@ -135,8 +135,7 @@ const MultiStepMenu: React.FC<MultiStepMenuProps> = ({
                 {currentStep === steps.length - 1
                   ? "Finaliser"
                   : "Étape Suivante"}
-              </button>
-            
+              </button>            
             )
           )}
         

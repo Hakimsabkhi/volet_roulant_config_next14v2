@@ -108,7 +108,7 @@ const optionManoeuvre = [
 
 const poseOptions = [
   {
-    label: "sous lanteau",
+    label: "Sous lanteau",
     description:
       "Coffre pan coupé ou quart de rond aluminium différentes couleurs",
     image: SousLanteau,

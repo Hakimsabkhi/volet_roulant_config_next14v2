@@ -137,7 +137,7 @@ const Viewer: React.FC<ViewerProps> = ({ setPosition, setTarget }) => {
 
       if (poseInstalled === 'En applique') {
         showHideNodes([3], [97, 182]);
-      } else if (poseInstalled === 'sous lanteau') {
+      } else if (poseInstalled === 'Sous lanteau') {
         showHideNodes([97], [3, 182]);
       } else if (poseInstalled === 'Sous lanteau inverse') {
         showHideNodes([182], [3, 97]);

@@ -104,7 +104,7 @@ const Manoeuvre: React.FC<ManoeuvreProps> = ({ enableNextButton }) => {
   };
 
   return (
-    <div className="w-full flex flex-col justify-around gap-[10px]">
+    <div className="w-full flex flex-col justify-around gap-[10px]  max-md:min-h-[100px] ">
       {isMobile && isConfigured ? (
         <div className="flex flex-col gap-[5px]">
           <h2 className="text-center">Votre volet est bien configuré</h2>
@@ -155,7 +155,7 @@ const Manoeuvre: React.FC<ManoeuvreProps> = ({ enableNextButton }) => {
               </div>
             </div>
           )}      
-          {loading &&  <div className='py-[8%]'><div className="border-4 border-solid border-gray-200 border-t-4 border-t-secondary rounded-full w-10 h-10 animate-spin mx-auto"></div></div>}              
+          {loading && <div className="border-4 border-solid border-gray-200 border-t-4 border-t-secondary rounded-full w-10 h-10 animate-spin mx-auto"></div>}              
         </>
       )}
     </div>

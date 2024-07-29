@@ -91,7 +91,7 @@ const CouleurVolet: React.FC<CouleurVoletProps> = ({ enableNextButton, setIsMobi
       <h3 className="max-md:text-center">{title}</h3>
       <div className="w-full flex">
         {loading ? (
-          <div className="border-4 border-solid border-gray-200 border-t-4 border-t-primary rounded-full w-10 h-10 animate-spin mx-auto"></div>
+          <div className="border-4 border-solid border-gray-200 border-t-4 border-t-secondary rounded-full w-10 h-10 animate-spin mx-auto"></div>
         ) : (
           <div className="flex justify-center flex-wrap gap-[5px]">{renderColorChoices(section)}</div>
         )}
