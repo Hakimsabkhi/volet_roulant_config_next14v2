@@ -7,11 +7,15 @@ import APIDataFetcher from './APIDataFetcher';
 import useScript from '../../hooks/useScript';
 import { ViewerProps } from "../../interfaces";
 import LoadingScreen from '../LoadingScreen';
+import Image from 'next/image';
+import MultiStepMenu from '../MultiStepMenu';
+import { ConfigIconIcon } from '../../assets/imageModule';
 
 const Viewer: React.FC<ViewerProps> = ({ setPosition, setTarget }) => {
   const [coulisseTexture, setCoulisseTexture] = useState("33b7f13018224606a347dc752a5bf9e5");
   const [tablierTexture, setTablierTexture] = useState("cec33a451ee5427687bfb05f847cdf09");
   const [lameFinaleTexture, setLameFinaleTexture] = useState("9a7c42640fa244fc828f6bb88c6b24ca");
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const poseInstalled = useSelector(selectposeInstalled);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -141,6 +145,15 @@ const Viewer: React.FC<ViewerProps> = ({ setPosition, setTarget }) => {
     }
   }, [poseInstalled]);
 
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
+  };
+
+  const handleSelectionsChange = (selections: any) => {
+    // Handle changes in selections here
+    console.log(selections);
+  };
+
   return (
     <div className="absolute w-full h-full">
       {isLoading && <LoadingScreen />}
@@ -154,13 +167,29 @@ const Viewer: React.FC<ViewerProps> = ({ setPosition, setTarget }) => {
         execution-while-not-rendered="true"
         web-share="true"
       ></iframe>
-      <OverlayButtons
-        handleViewChange={handleViewChange}
-      />
-      <TextureUpdater apiClient={apiClientRef.current} textureType="coulisse" textureId="fd81e75a-b2e0-4810-a6b2-75ecc2642917" setTexture={setCoulisseTexture} />
-      <TextureUpdater apiClient={apiClientRef.current} textureType="tablier" textureId="92eecb9c-a382-464a-8734-cb2cab58f5ee" setTexture={setTablierTexture} />
-      <TextureUpdater apiClient={apiClientRef.current} textureType="lameFinale" textureId="c1b65b55-ff79-473e-b744-bd0403d80962" setTexture={setLameFinaleTexture} />
-      <APIDataFetcher apiClient={apiClientRef.current} />
+      {!isLoading && (
+        <>
+          <OverlayButtons
+            handleViewChange={handleViewChange}
+          />
+          <TextureUpdater apiClient={apiClientRef.current} textureType="coulisse" textureId="fd81e75a-b2e0-4810-a6b2-75ecc2642917" setTexture={setCoulisseTexture} />
+          <TextureUpdater apiClient={apiClientRef.current} textureType="tablier" textureId="92eecb9c-a382-464a-8734-cb2cab58f5ee" setTexture={setTablierTexture} />
+          <TextureUpdater apiClient={apiClientRef.current} textureType="lameFinale" textureId="c1b65b55-ff79-473e-b744-bd0403d80962" setTexture={setLameFinaleTexture} />
+          <APIDataFetcher apiClient={apiClientRef.current} />
+          <div className="absolute top-[5%] left-[3%] w-[50%] flex items-center gap-[2%] max-md:w-full max-md:top-[2%] max-md:left-[0%] max-md:justify-center max-md:gap-[5%]">
+            <button className="w-[50px] h-[50px] bg-none border-none cursor-pointer flex items-center justify-center bg-cbutton shadow-[0_2px_6px_rgba(0,0,0,0.952)] rounded-[4px] transition-shadow duration-300 ease z-[1000] hover:bg-cwhite focus:bg-cwhite " onClick={toggleMenu}>
+              <Image src={ConfigIconIcon} alt="Config Icon" className="button-icon" width={40} height={40} />
+            </button>
+            <h2 className=' max-md:text-base w-fit h-full text-2xl uppercase font-base'>Configurer mon volet</h2>
+          </div>
+          {menuVisible && (
+            <div className="absolute w-[23%] flex flex-col top-[12%] left-[3%] z-[1000] max-md:top-auto max-md:w-[93%] max-md:bottom-[3%] max-md:justify-end">
+              <MultiStepMenu onSelectionsChange={handleSelectionsChange} />
+              {/* <CameraPosition position={position} setPosition={setPosition} target={target} setTarget={setTarget} /> */}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };
