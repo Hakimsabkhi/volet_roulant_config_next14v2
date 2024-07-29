@@ -100,7 +100,7 @@ const CouleurVolet: React.FC<CouleurVoletProps> = ({ enableNextButton, setIsMobi
   );
 
   return (
-    <div className="w-full flex flex-col justify-around gap-[10px]">
+    <div className="w-full flex flex-col justify-around gap-[10px] max-md:min-h-[100px] ">
       {isMobile && isConfigured ? (
         <div className="flex flex-col justify-center items-center text-cwhite text-center gap-[5px]">
           <p>Votre volet est bien colorisé</p>
