@@ -130,7 +130,7 @@ const MultiStepMenu: React.FC<MultiStepMenuProps> = ({
             </button>
           )}
           {currentStep < steps.length && currentStep !== steps.length && (
-            (isNextButtonEnabled || (isMobileConfigured && isNextButtonEnabled)) && (
+             (
               <button onClick={nextStep} className="nav-btn hover:bg-NavbuttonH ">
                 {currentStep === steps.length - 1
                   ? "Finaliser"

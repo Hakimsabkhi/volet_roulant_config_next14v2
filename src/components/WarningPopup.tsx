@@ -5,13 +5,13 @@ import Image from "next/image";
 
 const WarningPopup: React.FC<WarningPopupProps> = ({ message, onClose }) => {
   return (
-    <div className="popup-overlay">
-      <div className="popup-content">
-        <button onClick={onClose} className="close-button">
-          <Image src={exitIcon} alt="Outside View" className="button-close" width={40} height={40}/>
+    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex justify-center items-center z-1000 transition-opacity duration-300 ease-in-out opacity-100">
+      <div className="bg-[#e46148] rounded-[10px] text-center w-[80%] h-fit flex gap-1 flex-col justify-center px-2 py-2 transition-transform duration-300 ease-in-out transform translate-y-0">
+        <button onClick={onClose} className="bg-none border-none flex justify-end">
+          <Image src={exitIcon} alt="Outside View" width={30} height={30}/>
         </button>
-        <h3>Notification</h3>
-        <p>{message}</p>
+        <h3 className="text-xl font-bold uppercase"> Notification </h3>
+        <p className="text-sm">{message}</p>
       </div>
     </div>
   );
