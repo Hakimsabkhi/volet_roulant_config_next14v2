@@ -93,6 +93,53 @@ const MultiStepInfoDisplay: React.FC = () => {
     commandeManualSelectedPrice +
     dimensionCost;
 
+  const handleSubmit = async () => {
+    const data = {
+      selectedCoulisseColor,
+      selectedTablierColor,
+      selectedLameFinaleColor,
+      lameSelected,
+      dimensions,
+      poseInstalled,
+      manoeuvreSelected,
+      commandeManualSelected,
+      optionMotorisationSelected,
+      optionTelecomandeSelected,
+      optionInterrupteurSelected,
+      sortieDeCableSelected,
+      dimensionCost,
+      totalPrice,
+    };
+  
+    console.log("Submitting data:", data);
+  
+    // Basic client-side validation
+    if (!selectedCoulisseColor || !selectedTablierColor || !selectedLameFinaleColor || !lameSelected || !dimensions || !poseInstalled || !manoeuvreSelected || !dimensionCost || !totalPrice) {
+      alert("Please fill in all required fields");
+      return;
+    }
+  
+    try {
+      const response = await fetch("/api/saveData", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Error saving data");
+      }
+  
+      alert("Data saved successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to save data");
+    }
+  };
+  
+
   return (
     <div className="flex flex-col text-left gap-[10px] font-normal">
       <table>
@@ -110,7 +157,7 @@ const MultiStepInfoDisplay: React.FC = () => {
             <td>{dimensionCost.toFixed(2)}€</td>
           </tr>
           <tr>
-          <th>Type d&apos;Installation</th>
+            <th>Type d&apos;Installation</th>
             <td>{poseInstalled}</td>
             <td>{poseInstalledPrice}€</td>
           </tr>
@@ -186,7 +233,11 @@ const MultiStepInfoDisplay: React.FC = () => {
       />
 
       {/* Button to export to PDF */}
-      <PDFExport dimensionCost={dimensionCost} totalPrice={totalPrice} />
+      {/* <PDFExport dimensionCost={dimensionCost} totalPrice={totalPrice} /> */}
+
+      <button onClick={handleSubmit} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded">
+        Save Data
+      </button>
     </div>
   );
 };

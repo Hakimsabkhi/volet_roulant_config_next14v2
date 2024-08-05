@@ -155,7 +155,7 @@ const Manoeuvre: React.FC<ManoeuvreProps> = ({ enableNextButton }) => {
               </div>
             </div>
           )}      
-          {loading && <div className="border-4 border-solid border-gray-200 border-t-4 border-t-secondary rounded-full w-10 h-10 animate-spin mx-auto"></div>}              
+          {loading && <div className="border-4 border-solid border-cwhite border-t-4 border-t-secondary rounded-full w-10 h-10 animate-spin mx-auto"></div>}              
         </>
       )}
     </div>

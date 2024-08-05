@@ -23,5 +23,7 @@ import IsideViewIcon from './iside_view.png';
 import enableRotation from './camera.png';
 import disableRotation from './pause.png';
 import ConfigIconIcon from './ConfigIcon.png';
+import userIcon from './userIcon.png';
 
-export { Droite, EnApplique, Gauche, EnInverse, Filaire, Radio, Manuel, Sangle, Manivelle, MoteurBeker, SousLanteau, SousLanteauInverse, AppliqueEnApplique, AppliqueEncastre, Lame41Image, Lame55Image ,Sans,Telecommand, outsideViewIcon, insideViewIcon, OsideViewIcon, IsideViewIcon, enableRotation, disableRotation, ConfigIconIcon}
+
+export { Droite, EnApplique, Gauche, EnInverse, Filaire, Radio, Manuel, Sangle, Manivelle, MoteurBeker, SousLanteau, SousLanteauInverse, AppliqueEnApplique, AppliqueEncastre, Lame41Image, Lame55Image ,Sans,Telecommand, outsideViewIcon, insideViewIcon, OsideViewIcon, IsideViewIcon, enableRotation, disableRotation, ConfigIconIcon, userIcon}

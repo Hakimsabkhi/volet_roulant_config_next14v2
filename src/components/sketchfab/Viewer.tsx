@@ -176,7 +176,7 @@ const Viewer: React.FC<ViewerProps> = ({ setPosition, setTarget }) => {
           <TextureUpdater apiClient={apiClientRef.current} textureType="tablier" textureId="92eecb9c-a382-464a-8734-cb2cab58f5ee" setTexture={setTablierTexture} />
           <TextureUpdater apiClient={apiClientRef.current} textureType="lameFinale" textureId="c1b65b55-ff79-473e-b744-bd0403d80962" setTexture={setLameFinaleTexture} />
           <APIDataFetcher apiClient={apiClientRef.current} />
-          <div className="absolute top-[5%] left-[3%] w-[50%] flex items-center gap-[2%] max-md:w-full max-md:top-[2%] max-md:left-[0%] max-md:justify-center max-md:gap-[5%]">
+          <div className="absolute top-[2%] left-[3%] w-[50%] flex items-center gap-[2%] max-md:w-full max-md:top-[2%] max-md:left-[0%] max-md:justify-center max-md:gap-[5%]">
             <button className="w-[50px] h-[50px] bg-none border-none cursor-pointer flex items-center justify-center bg-cbutton shadow-[0_2px_6px_rgba(0,0,0,0.952)] rounded-[4px] transition-shadow duration-300 ease z-[1000] hover:bg-cwhite focus:bg-cwhite " onClick={toggleMenu}>
               <Image src={ConfigIconIcon} alt="Config Icon" className="button-icon" width={40} height={40} />
             </button>
