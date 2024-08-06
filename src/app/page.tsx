@@ -5,7 +5,6 @@ import UserDropdown from "../components/UserDropdown"; // Import the new compone
 import { ConfigIconIcon } from "../assets/imageModule";
 import Image from "next/image";
 import Link from "next/link";
-import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell} from "@nextui-org/table";
 
 interface Devis {
   _id: string;
@@ -104,7 +103,7 @@ const Home: React.FC = () => {
       <div className="mt-10 ml-20 flex flex-col gap-3 mb-8">
         {devis.map((devisItem) => (
           
-          <div key={devisItem._id} className="w-[95%] p-4 flex flex-col gap-6 border-2 rounded-md border-black">
+          <div key={devisItem._id} className="w-[95%] p-4 flex flex-col gap-6 border rounded-md border-black">
              <h2 className="text-2xl font-bold mb-4">Devis Numéro: {devisItem._id}</h2>
             <table className="w-full bg-white">
               <thead>
@@ -136,14 +135,15 @@ const Home: React.FC = () => {
               <tbody>
                 <tr>
                   <td className="py-2 px-4 border-b border-black text-sm">{devisItem.lameSelected}</td>
-                  <td className="py-2 px-4 border-b border-black  text-sm">
-                    Largeur: {devisItem.dimensions.Largeur} mm, Hauteur:{" "}
-                    {devisItem.dimensions.Hauteur} mm
-                  </td>
+                  <td className="py-2 px-4 border-b border-black text-sm">
+  Largeur: {devisItem.dimensions.Largeur} mm
+  <br />
+  Hauteur: {devisItem.dimensions.Hauteur} mm
+</td>
                   <td className="py-2 px-4 border-b text-sm border-black ">{devisItem.poseInstalled}</td>
                   <td className="py-2 px-4 border-b text-sm border-black ">
-                    Coulisse: {devisItem.selectedCoulisseColor} / Tablier:{" "}
-                    {devisItem.selectedTablierColor} / Lame Finale:{" "}
+                    Coulisse: {devisItem.selectedCoulisseColor}   <br /> Tablier:{" "}
+                    {devisItem.selectedTablierColor}   <br /> Lame Finale:{" "}
                     {devisItem.selectedLameFinaleColor}
                   </td>
                   <td className="py-2 px-4 border-b text-sm border-black ">
