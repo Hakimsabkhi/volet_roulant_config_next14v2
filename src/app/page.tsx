@@ -101,15 +101,15 @@ const Home: React.FC = () => {
         )}
       </div>
 
-      <div className="mt-10 ml-20">
+      <div className="mt-10 ml-20 flex flex-col gap-3 mb-8">
         {devis.map((devisItem) => (
           
-          <div key={devisItem._id} className="mb-8">
-            
-            <table className="w-[95%] bg-white">
+          <div key={devisItem._id} className="w-[95%] p-4 flex flex-col gap-6 border-2 rounded-md border-black">
+             <h2 className="text-2xl font-bold mb-4">Devis Numéro: {devisItem._id}</h2>
+            <table className="w-full bg-white">
               <thead>
                 <tr>
-                  <th className="py-2 px-4 border-b text-sm font-bold">Type de Lame</th>
+                  <th className="py-2 px-4 border-b text-sm font-bold ">Type de Lame</th>
                   <th className="py-2 px-4 border-b text-sm font-bold">Dimensions</th>
                   <th className="py-2 px-4 border-b text-sm font-bold">Type d&apos;Installation</th>
                   <th className="py-2 px-4 border-b text-sm font-bold">Couleurs</th>
@@ -135,41 +135,41 @@ const Home: React.FC = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td className="py-2 px-4 border-b">{devisItem.lameSelected}</td>
-                  <td className="py-2 px-4 border-b">
+                  <td className="py-2 px-4 border-b border-black text-sm">{devisItem.lameSelected}</td>
+                  <td className="py-2 px-4 border-b border-black  text-sm">
                     Largeur: {devisItem.dimensions.Largeur} mm, Hauteur:{" "}
                     {devisItem.dimensions.Hauteur} mm
                   </td>
-                  <td className="py-2 px-4 border-b">{devisItem.poseInstalled}</td>
-                  <td className="py-2 px-4 border-b">
+                  <td className="py-2 px-4 border-b text-sm border-black ">{devisItem.poseInstalled}</td>
+                  <td className="py-2 px-4 border-b text-sm border-black ">
                     Coulisse: {devisItem.selectedCoulisseColor} / Tablier:{" "}
                     {devisItem.selectedTablierColor} / Lame Finale:{" "}
                     {devisItem.selectedLameFinaleColor}
                   </td>
-                  <td className="py-2 px-4 border-b">
+                  <td className="py-2 px-4 border-b text-sm border-black ">
                     {devisItem.manoeuvreSelected}
                   </td>
                   {devisItem.manoeuvreSelected === "Manuel" && (
-                    <td className="py-2 px-4 border-b">
+                    <td className="py-2 px-4 border-b text-sm border-black ">
                       {devisItem.commandeManualSelected || "N/A"}
                     </td>
                   )}
                   {devisItem.manoeuvreSelected === "Motorisé" && (
                     <>
-                      <td className="py-2 px-4 border-b">
+                      <td className="py-2 px-4 border-b text-sm border-black ">
                         {devisItem.optionMotorisationSelected}
                       </td>
                       {devisItem.optionMotorisationSelected === "Radio" && (
-                        <td className="py-2 px-4 border-b">
+                        <td className="py-2 px-4 border-b text-sm border-black ">
                           {devisItem.optionTelecomandeSelected || "N/A"}
                         </td>
                       )}
                       {devisItem.optionMotorisationSelected === "Filaire" && (
                         <>
-                          <td className="py-2 px-4 border-b">
+                          <td className="py-2 px-4 border-b text-sm border-black">
                             {devisItem.optionInterrupteurSelected || "N/A"}
                           </td>
-                          <td className="py-2 px-4 border-b">
+                          <td className="py-2 px-4 border-b text-sm border-black ">
                             {devisItem.sortieDeCableSelected || "N/A"}
                           </td>
                         </>
@@ -182,46 +182,39 @@ const Home: React.FC = () => {
             <table className="w-[45%]">
               <thead>
                 <tr>
-                  <th className="py-2 px-4 border-b bg-cbutton text-sm font-bold">Total HT</th>
-                  <th className="py-2 px-4 border-b bg-cbutton text-sm font-bold">Total TTC</th>
+                  <th className="py-2 px-4 border-b bg-secondary text-sm font-bold ">Total HT</th>
+                  <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">Total TTC</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="py-2 px-4 border-b text-sm font-bold">
+                  <td className="py-2 px-4 border-b text-sm font-bold border-black">
                     {devisItem.totalPrice.toFixed(2)}€
                   </td>
-                  <td className="py-2 px-4 border-b text-sm font-bold">
+                  <td className="py-2 px-4 border-b text-sm font-bold border-black">
                     {(devisItem.totalPrice * 1.2).toFixed(2)}€
-                  </td>
-                  <td className="py-2 px-4 border-b  text-sm font-bold">
                   </td>
                 </tr>
               </tbody>
             </table>
             <table className="w-[45%]">
-              <thead>
-                <tr>
-                  <th className="py-2 px-4 border-b bg-cbutton text-sm font-bold">Actions</th>
-                </tr>
-              </thead>
               <tbody>
                 <tr>
                   <td className="py-2 px-4 border-b  text-sm font-bold flex gap-5 ">
                   <button
-                      className="text-red-600 hover:text-red-800"
+                      className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2"
                   
                     >
                     Valider mon devis
                     </button>
                     <button
-                      className="text-red-600 hover:text-red-800"
+                      className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2"
                 
                     >
                     Modifier
                     </button>
                     <button
-                      className="text-red-600 hover:text-red-800"
+                      className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2"
                       onClick={() => handleDelete(devisItem._id)}
                     >
                     Delete
