@@ -8,6 +8,7 @@ import Link from "next/link";
 
 interface Devis {
   _id: string;
+  DevisNumber: string;
   selectedCoulisseColor: string;
   selectedTablierColor: string;
   selectedLameFinaleColor: string;
@@ -104,7 +105,7 @@ const Home: React.FC = () => {
         {devis.map((devisItem) => (
           
           <div key={devisItem._id} className="w-[95%] p-4 flex flex-col gap-6 border rounded-md border-black">
-             <h2 className="text-2xl font-bold mb-4">Devis Numéro: {devisItem._id}</h2>
+             <h2 className="text-2xl font-bold mb-4">Devis Numéro: {devisItem.DevisNumber}</h2>
             <table className="w-full bg-white">
               <thead>
                 <tr>
