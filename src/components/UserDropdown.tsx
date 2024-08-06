@@ -1,6 +1,6 @@
 "use client"; // This directive ensures the component is a client component
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { signOut } from "next-auth/react";
 import Image from 'next/image';
 import { userIcon } from '../assets/imageModule';
@@ -12,13 +12,39 @@ interface UserDropdownProps {
 
 const UserDropdown: React.FC<UserDropdownProps> = ({ userName, userEmail }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      setDropdownOpen(false);
+    }
+  };
+
+  const handleScroll = () => {
+    setDropdownOpen(false);
+  };
+
+  useEffect(() => {
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("scroll", handleScroll, true);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("scroll", handleScroll, true);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("scroll", handleScroll, true);
+    };
+  }, [dropdownOpen]);
+
   return (
-    <div className="flex flex-col items-end">
+    <div className="flex flex-col items-end" ref={dropdownRef}>
       <button
         id="dropdownUserButton"
         onClick={toggleDropdown}
@@ -32,7 +58,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ userName, userEmail }) => {
       {dropdownOpen && (
         <div
           id="dropdownAvatar"
-          className="fixed z-10 top-20 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+          className="absolute z-10 top-20 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
         >
           <div className="px-4 py-3 text-sm text-gray-900">
             <div>{userName}</div> {/* Display user's name */}

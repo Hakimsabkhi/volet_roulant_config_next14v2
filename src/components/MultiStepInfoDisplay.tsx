@@ -235,8 +235,8 @@ const MultiStepInfoDisplay: React.FC = () => {
       {/* Button to export to PDF */}
       {/* <PDFExport dimensionCost={dimensionCost} totalPrice={totalPrice} /> */}
 
-      <button onClick={handleSubmit} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded">
-        Save Data
+      <button onClick={handleSubmit} className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2">
+      sauvegarde mon devis et quitter
       </button>
     </div>
   );

@@ -1,10 +1,10 @@
-"use client"; // This directive ensures the component is a client component
+// pages/index.tsx
+"use client";
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import UserDropdown from "../components/UserDropdown"; // Import the new component
-import { ConfigIconIcon } from "../assets/imageModule";
-import Image from "next/image";
-import Link from "next/link";
+import UserDropdown from "../components/UserDropdown";
+import CreateDevisButton from "../components/CreateDevisButton";
+import DevisTable from "../components/DevisTable";
 
 interface Devis {
   _id: string;
@@ -79,18 +79,7 @@ const Home: React.FC = () => {
       <h1 className="text-4xl font-bold ml-20 mt-20">Mes Devis</h1>
       <hr className="ml-20 mt-2 w-1/4 border-t-2 border-gray-300" />
       <div className="absolute top-4 right-16 z-[1000] flex gap-4">
-        <Link href="/configurateur">
-          <button className="w-fit text-[#fff] hover:text-[#44326E] gap-2 font-bold h-[50px] px-2 bg-none border-none cursor-pointer flex items-center justify-center bg-cbutton shadow-[0_2px_6px_rgba(0,0,0,0.952)] rounded-[4px] transition-shadow duration-300 ease z-[1000] hover:bg-cwhite">
-            <Image
-              src={ConfigIconIcon}
-              alt="Config Icon"
-              className="button-icon"
-              width={40}
-              height={40}
-            />
-            <p>Créer un devis</p>
-          </button>
-        </Link>
+        <CreateDevisButton />
         {session ? (
           <UserDropdown
             userName={session.user?.name || "User"}
@@ -100,133 +89,7 @@ const Home: React.FC = () => {
           <p>Redirecting to sign-in...</p>
         )}
       </div>
-
-      <div className="mt-10 ml-20 flex flex-col gap-3 mb-8">
-        {devis.map((devisItem) => (
-          
-          <div key={devisItem._id} className="w-[95%] p-4 flex flex-col gap-6 border rounded-md border-black">
-             <h2 className="text-2xl font-bold mb-4">Devis Numéro: {devisItem.DevisNumber}</h2>
-            <table className="w-full bg-white">
-              <thead>
-                <tr>
-                  <th className="py-2 px-4 border-b text-sm font-bold ">Type de Lame</th>
-                  <th className="py-2 px-4 border-b text-sm font-bold">Dimensions</th>
-                  <th className="py-2 px-4 border-b text-sm font-bold">Type d&apos;Installation</th>
-                  <th className="py-2 px-4 border-b text-sm font-bold">Couleurs</th>
-                  <th className="py-2 px-4 border-b text-sm font-bold">Type de Manoeuvre</th>
-                  {devisItem.manoeuvreSelected === "Manuel" && (
-                    <th className="py-2 px-4 border-b text-sm font-bold">Outil de commande</th>
-                  )}
-                  {devisItem.manoeuvreSelected === "Motorisé" && (
-                    <>
-                      <th className="py-2 px-4 border-b text-sm font-bold">Type de motorisation</th>
-                      {devisItem.optionMotorisationSelected === "Radio" && (
-                        <th className="py-2 px-4 border-b text-sm font-bold">Télécommande</th>
-                      )}
-                      {devisItem.optionMotorisationSelected === "Filaire" && (
-                        <>
-                          <th className="py-2 px-4 border-b text-sm font-bold">Interrupteur</th>
-                          <th className="py-2 px-4 border-b text-sm font-bold">Sortie de cable</th>
-                        </>
-                      )}
-                    </>
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="py-2 px-4 border-b border-black text-sm">{devisItem.lameSelected}</td>
-                  <td className="py-2 px-4 border-b border-black text-sm">
-  Largeur: {devisItem.dimensions.Largeur} mm
-  <br />
-  Hauteur: {devisItem.dimensions.Hauteur} mm
-</td>
-                  <td className="py-2 px-4 border-b text-sm border-black ">{devisItem.poseInstalled}</td>
-                  <td className="py-2 px-4 border-b text-sm border-black ">
-                    Coulisse: {devisItem.selectedCoulisseColor}   <br /> Tablier:{" "}
-                    {devisItem.selectedTablierColor}   <br /> Lame Finale:{" "}
-                    {devisItem.selectedLameFinaleColor}
-                  </td>
-                  <td className="py-2 px-4 border-b text-sm border-black ">
-                    {devisItem.manoeuvreSelected}
-                  </td>
-                  {devisItem.manoeuvreSelected === "Manuel" && (
-                    <td className="py-2 px-4 border-b text-sm border-black ">
-                      {devisItem.commandeManualSelected || "N/A"}
-                    </td>
-                  )}
-                  {devisItem.manoeuvreSelected === "Motorisé" && (
-                    <>
-                      <td className="py-2 px-4 border-b text-sm border-black ">
-                        {devisItem.optionMotorisationSelected}
-                      </td>
-                      {devisItem.optionMotorisationSelected === "Radio" && (
-                        <td className="py-2 px-4 border-b text-sm border-black ">
-                          {devisItem.optionTelecomandeSelected || "N/A"}
-                        </td>
-                      )}
-                      {devisItem.optionMotorisationSelected === "Filaire" && (
-                        <>
-                          <td className="py-2 px-4 border-b text-sm border-black">
-                            {devisItem.optionInterrupteurSelected || "N/A"}
-                          </td>
-                          <td className="py-2 px-4 border-b text-sm border-black ">
-                            {devisItem.sortieDeCableSelected || "N/A"}
-                          </td>
-                        </>
-                      )}
-                    </>
-                  )}
-                </tr>
-              </tbody>
-            </table>
-            <table className="w-[45%]">
-              <thead>
-                <tr>
-                  <th className="py-2 px-4 border-b bg-secondary text-sm font-bold ">Total HT</th>
-                  <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">Total TTC</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="py-2 px-4 border-b text-sm font-bold border-black">
-                    {devisItem.totalPrice.toFixed(2)}€
-                  </td>
-                  <td className="py-2 px-4 border-b text-sm font-bold border-black">
-                    {(devisItem.totalPrice * 1.2).toFixed(2)}€
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <table className="w-[45%]">
-              <tbody>
-                <tr>
-                  <td className="py-2 px-4 border-b  text-sm font-bold flex gap-5 ">
-                  <button
-                      className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2"
-                  
-                    >
-                    Valider mon devis
-                    </button>
-                    <button
-                      className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2"
-                
-                    >
-                    Modifier
-                    </button>
-                    <button
-                      className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2"
-                      onClick={() => handleDelete(devisItem._id)}
-                    >
-                    Delete
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        ))}
-      </div>
+      <DevisTable devis={devis} handleDelete={handleDelete} />
     </div>
   );
 };

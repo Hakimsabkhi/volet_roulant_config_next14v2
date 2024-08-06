@@ -145,7 +145,7 @@ const MultiStepMenu: React.FC<MultiStepMenuProps> = ({
                 Modifier mon produit
               </button>
               <button onClick={toggleInformationDisplay} className="nav-btn hover:bg-NavbuttonH max-md:text-xs">
-                Recevoir mon devis
+              Approuver mon devis
               </button>
             </>
           )}
