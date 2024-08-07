@@ -1,5 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import NextAuth, { NextAuthOptions, Session, User, DefaultSession } from 'next-auth';
+import { NextAuthOptions, Session, User, DefaultSession } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { JWT } from 'next-auth/jwt';
@@ -41,7 +40,7 @@ const googleClientId: string = getEnvVar('GOOGLE_CLIENT_ID');
 const googleClientSecret: string = getEnvVar('GOOGLE_CLIENT_SECRET');
 const nextAuthSecret: string = getEnvVar('NEXTAUTH_SECRET');
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: googleClientId,
@@ -129,15 +128,3 @@ const authOptions: NextAuthOptions = {
   },
   secret: nextAuthSecret,
 };
-
-// Named export for the GET method
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
-  return NextAuth(req, res, authOptions);
-}
-
-// Named export for the POST method
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  return NextAuth(req, res, authOptions);
-}
-
-// Add other HTTP methods as needed, following the same structure
