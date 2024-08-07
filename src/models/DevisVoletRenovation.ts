@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, model, CallbackError, Types } from 'mongoose';
+// src/models/DevisVoletRenovation.ts
+import mongoose, { Schema, Document, model, Types } from 'mongoose';
 
 interface IDevisVoletRenovation extends Document {
   user: Types.ObjectId;
@@ -46,23 +47,6 @@ const DevisVoletRenovationSchema: Schema = new Schema({
 
 // Compound index to ensure DevisNumber is unique for each user
 DevisVoletRenovationSchema.index({ user: 1, DevisNumber: 1 }, { unique: true });
-
-// Pre-validate middleware to generate unique DevisNumber
-DevisVoletRenovationSchema.pre<IDevisVoletRenovation>('validate', async function (next) {
-  if (this.isNew) {
-    try {
-      const lastDevis = await mongoose.models.DevisVoletRenovation
-        .findOne({ user: this.user })
-        .sort({ DevisNumber: -1 })
-        .exec();
-      const lastDevisNumber = lastDevis ? parseInt(lastDevis.DevisNumber, 10) : 0;
-      this.DevisNumber = (lastDevisNumber + 1).toString().padStart(6, '0');
-    } catch (error) {
-      return next(error as CallbackError);
-    }
-  }
-  next();
-});
 
 const DevisVoletRenovation = mongoose.models.DevisVoletRenovation || model<IDevisVoletRenovation>('DevisVoletRenovation', DevisVoletRenovationSchema);
 

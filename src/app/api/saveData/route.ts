@@ -1,10 +1,10 @@
+// src/app/api/saveData/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '../../../lib/db';
 import DevisVoletRenovation from '../../../models/DevisVoletRenovation';
 import User from '../../../models/User';
 import { getToken } from 'next-auth/jwt';
 
-// Define an interface for MongoDB server errors
 interface MongoServerError extends Error {
   code: number;
 }
@@ -18,20 +18,26 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Fetch the user from the database
     const user = await User.findOne({ email: token.email }).exec();
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     const body = await req.json();
+
+    // Find the last Devis created by the user
+    const lastDevis = await DevisVoletRenovation.findOne({ user: user._id })
+      .sort({ DevisNumber: -1 })
+      .exec();
+    const lastDevisNumber = lastDevis ? parseInt(lastDevis.DevisNumber, 10) : 0;
+    const newDevisNumber = (lastDevisNumber + 1).toString().padStart(6, '0');
+
     const newDevis = new DevisVoletRenovation({
       ...body,
-      user: user._id,  // Use the MongoDB ObjectId
+      user: user._id,
+      DevisNumber: newDevisNumber,
     });
 
-    // Save newDevis with unique DevisNumber for each user
-    await newDevis.validate();
     const result = await newDevis.save();
 
     return NextResponse.json(result, { status: 201 });

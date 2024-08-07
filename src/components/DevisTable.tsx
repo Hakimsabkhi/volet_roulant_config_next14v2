@@ -29,7 +29,7 @@ interface DevisTableProps {
 }
 
 const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => {
-  if (!Array.isArray(devis)) {
+  if (!Array.isArray(devis) || devis.length === 0) {
     return <div className="mt-10 ml-20">No devis available</div>;
   }
 
