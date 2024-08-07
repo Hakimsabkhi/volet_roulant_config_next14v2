@@ -1,5 +1,3 @@
-// File path: /app/api/auth/[...nextauth]/route.ts
-
 import { NextApiRequest, NextApiResponse } from 'next';
 import NextAuth, { NextAuthOptions, Session, User, DefaultSession } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
@@ -134,12 +132,12 @@ const authOptions: NextAuthOptions = {
 
 // Named export for the GET method
 export async function GET(req: NextApiRequest, res: NextApiResponse) {
-  return await NextAuth(req, res, authOptions);
+  return NextAuth(req, res, authOptions);
 }
 
 // Named export for the POST method
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  return await NextAuth(req, res, authOptions);
+  return NextAuth(req, res, authOptions);
 }
 
 // Add other HTTP methods as needed, following the same structure
