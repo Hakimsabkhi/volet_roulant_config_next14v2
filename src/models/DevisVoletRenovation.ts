@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document, model, CallbackError } from 'mongoose';
 
 interface IDevisVoletRenovation extends Document {
+  user: mongoose.Types.ObjectId;  // Reference to the user who created the Devis
   DevisNumber: string;
   selectedCoulisseColor: string;
   selectedTablierColor: string;
@@ -22,6 +23,7 @@ interface IDevisVoletRenovation extends Document {
 }
 
 const DevisVoletRenovationSchema: Schema = new Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   DevisNumber: { type: String, unique: true, required: true },
   selectedCoulisseColor: { type: String, required: true },
   selectedTablierColor: { type: String, required: true },

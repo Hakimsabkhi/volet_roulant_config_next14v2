@@ -1,4 +1,3 @@
-// components/DevisTable.tsx
 "use client";
 import React from "react";
 
@@ -29,7 +28,11 @@ interface DevisTableProps {
   handleDelete: (id: string) => void;
 }
 
-const DevisTable: React.FC<DevisTableProps> = ({ devis, handleDelete }) => {
+const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => {
+  if (!Array.isArray(devis)) {
+    return <div className="mt-10 ml-20">No devis available</div>;
+  }
+
   return (
     <div className="mt-10 ml-20 flex flex-col gap-3 mb-8">
       {devis.map((devisItem) => (

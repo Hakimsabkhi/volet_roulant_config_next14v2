@@ -93,11 +93,7 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
-        await connectToDatabase();
-        const existingUser = await UserModel.findOne({ email: user.email }) as UserType | null;
-        if (existingUser) {
-          token.id = existingUser._id.toString(); // Ensure id is a string
-        }
+        token.id = user.id;
       }
       return token;
     },

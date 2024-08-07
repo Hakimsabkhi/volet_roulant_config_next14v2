@@ -1,4 +1,3 @@
-// pages/index.tsx
 "use client";
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
@@ -33,21 +32,23 @@ const Home: React.FC = () => {
   const [devis, setDevis] = useState<Devis[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/getDevis");
-        const data = await response.json();
-        setDevis(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const response = await fetch("/api/getDevis");
+      const data = await response.json();
+      setDevis(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchData();
-  }, []);
+  useEffect(() => {
+    if (session) {
+      fetchData();
+    }
+  }, [session]);
 
   const handleDelete = async (id: string) => {
     try {
@@ -71,7 +72,7 @@ const Home: React.FC = () => {
   };
 
   if (status === "loading" || loading) {
-    return <p>Loading...</p>; // Show a loading state while the session is being fetched
+    return <p>Loading...</p>; // Show a loading state while the session or data is being fetched
   }
 
   return (
