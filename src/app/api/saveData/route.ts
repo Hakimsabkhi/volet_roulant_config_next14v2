@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '../../../lib/db';
 import DevisVoletRenovation from '../../../models/DevisVoletRenovation';
-import User from '../../../models/User';  // Import the User model
+import User from '../../../models/User';
 import { getToken } from 'next-auth/jwt';
+
+// Define an interface for MongoDB server errors
+interface MongoServerError extends Error {
+  code: number;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -25,10 +30,18 @@ export async function POST(req: NextRequest) {
       user: user._id,  // Use the MongoDB ObjectId
     });
 
+    // Save newDevis with unique DevisNumber for each user
+    await newDevis.validate();
     const result = await newDevis.save();
 
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
+    if ((error as MongoServerError).code === 11000) {
+      return NextResponse.json(
+        { error: 'Duplicate DevisNumber detected. Please try again.' },
+        { status: 400 }
+      );
+    }
     console.error(error);
     return NextResponse.json(
       { error: 'Error saving data', details: (error as Error).message },

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '../../../lib/db';
 import DevisVoletRenovation from '../../../models/DevisVoletRenovation';
-import User from '../../../models/User';  // Import the User model
+import User from '../../../models/User';
 import { getToken } from 'next-auth/jwt';
 
 export async function GET(req: NextRequest) {

@@ -1,7 +1,7 @@
-import mongoose, { Schema, Document, model, CallbackError } from 'mongoose';
+import mongoose, { Schema, Document, model, CallbackError, Types } from 'mongoose';
 
 interface IDevisVoletRenovation extends Document {
-  user: mongoose.Types.ObjectId;  // Reference to the user who created the Devis
+  user: Types.ObjectId;
   DevisNumber: string;
   selectedCoulisseColor: string;
   selectedTablierColor: string;
@@ -24,7 +24,7 @@ interface IDevisVoletRenovation extends Document {
 
 const DevisVoletRenovationSchema: Schema = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  DevisNumber: { type: String, unique: true, required: true },
+  DevisNumber: { type: String, required: true },
   selectedCoulisseColor: { type: String, required: true },
   selectedTablierColor: { type: String, required: true },
   selectedLameFinaleColor: { type: String, required: true },
@@ -44,16 +44,20 @@ const DevisVoletRenovationSchema: Schema = new Schema({
   totalPrice: { type: Number, required: true },
 });
 
+// Compound index to ensure DevisNumber is unique for each user
+DevisVoletRenovationSchema.index({ user: 1, DevisNumber: 1 }, { unique: true });
+
 // Pre-validate middleware to generate unique DevisNumber
 DevisVoletRenovationSchema.pre<IDevisVoletRenovation>('validate', async function (next) {
   if (this.isNew) {
     try {
-      const lastDevis = await mongoose.models.DevisVoletRenovation.findOne().sort({ DevisNumber: -1 }).exec();
+      const lastDevis = await mongoose.models.DevisVoletRenovation
+        .findOne({ user: this.user })
+        .sort({ DevisNumber: -1 })
+        .exec();
       const lastDevisNumber = lastDevis ? parseInt(lastDevis.DevisNumber, 10) : 0;
       this.DevisNumber = (lastDevisNumber + 1).toString().padStart(6, '0');
-      console.log(`Generated DevisNumber: ${this.DevisNumber}`);
     } catch (error) {
-      console.error('Error generating DevisNumber:', error);
       return next(error as CallbackError);
     }
   }
