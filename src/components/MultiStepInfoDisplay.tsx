@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation"; // Import useRouter from next/navigation
 import DimensionCostCalculator from "./calculator/dimensionCostCalculator";
 import {
   optionsMotorisations,
@@ -24,6 +25,7 @@ const getPrice = (options: any[], selectedOption: string) => {
 
 const MultiStepInfoDisplay: React.FC = () => {
   const [dimensionCost, setDimensionCost] = useState(0);
+  const router = useRouter(); // Initialize useRouter
 
   const selectedCoulisseColor = useSelector(
     (state: RootState) => state.volet.selectedColor.coulisse
@@ -133,6 +135,7 @@ const MultiStepInfoDisplay: React.FC = () => {
       }
   
       alert("Data saved successfully!");
+      router.push("/"); // Redirect to home page after saving data
     } catch (error) {
       console.error(error);
       alert("Failed to save data");
@@ -236,7 +239,7 @@ const MultiStepInfoDisplay: React.FC = () => {
       {/* <PDFExport dimensionCost={dimensionCost} totalPrice={totalPrice} /> */}
 
       <button onClick={handleSubmit} className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2">
-      sauvegarde mon devis et quitter
+        sauvegarde mon devis et quitter
       </button>
     </div>
   );
