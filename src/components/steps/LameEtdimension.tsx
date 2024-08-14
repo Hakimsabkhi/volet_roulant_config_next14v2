@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setlameSelected, setDimensions } from "../../store/voletSlice";
+import { setLameSelected, setDimensions } from "../../store/voletSlice";
 import { lameChoices } from "../../assets/Data";
 import { RootState } from "../../store";
 import { LameEtDimensionProps } from "../../interfaces";
@@ -42,7 +42,7 @@ const LameEtDimension: React.FC<LameEtDimensionProps> = ({
   };
 
   const handleLameChoice = (lameChoice: any) => {
-    dispatch(setlameSelected(lameChoice.label));
+    dispatch(setLameSelected(lameChoice.label));
 
     const newMaxWidth = lameChoice.label === "Lame 41" ? 3000 : 3500;
     const newMaxHeight = lameChoice.label === "Lame 41" ? 2700 : 3000;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, MouseEvent } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setposeInstalled, selectPoseInstalled } from "../../store/voletSlice";
+import { setPoseInstalled, selectPoseInstalled } from "../../store/voletSlice";
 import { poseOptions } from "../../assets/Data";
 import { TypeDePoseProps } from "../../interfaces";
 import Image from "next/image";
@@ -63,7 +63,7 @@ function TypeDePose({ enableNextButton }: TypeDePoseProps) {
                   className="hidden"
                   checked={choice.label === poseInstalled}
                   id={`checkbox-${choice.label}`}
-                  onChange={() => dispatch(setposeInstalled(choice.label))}
+                  onChange={() => dispatch(setPoseInstalled(choice.label))}
                   required
                 />
                 <label htmlFor={`checkbox-${choice.label}`}></label>
