@@ -4,6 +4,8 @@ import connectToDatabase from '@/lib/db'; // Adjust the import path as needed
 import DevisVoletRenovation from '@/models/DevisVoletRenovation'; // Adjust the import path as needed
 import { Types } from 'mongoose';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   try {
     await connectToDatabase();

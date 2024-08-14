@@ -1,4 +1,3 @@
-/* src/app/api/getDevis/route.ts */
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '../../../lib/db';
 import DevisVoletRenovation from '../../../models/DevisVoletRenovation';
@@ -28,3 +27,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Error fetching data', details: (error as Error).message }, { status: 500 });
   }
 }
+
+// This explicitly marks the route as dynamic (though it shouldn't be necessary)
+export const dynamic = 'force-dynamic';

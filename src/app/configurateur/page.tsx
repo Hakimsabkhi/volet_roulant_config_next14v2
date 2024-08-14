@@ -1,7 +1,7 @@
 /* src/app/configurateur/page.tsx */
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { Provider, useDispatch } from 'react-redux';
 import store from '../../store'; // Adjust the import path according to your project structure
 import Viewer from '../../components/sketchfab/Viewer';
@@ -10,7 +10,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { setVoletFromDevis } from '@/store/voletSlice'; // Adjust the import path according to your project structure
 
-const Configurateur: React.FC = () => {
+const ConfigurateurContent: React.FC = () => {
   const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
   const [target, setTarget] = useState({ x: 0, y: 0, z: 0 });
   const { data: session, status } = useSession();
@@ -76,7 +76,9 @@ const Configurateur: React.FC = () => {
 
 const WrappedConfigurateur: React.FC = () => (
   <Provider store={store}>
-    <Configurateur />
+    <Suspense fallback={<div>Loading configuration...</div>}>
+      <ConfigurateurContent />
+    </Suspense>
   </Provider>
 );
 
