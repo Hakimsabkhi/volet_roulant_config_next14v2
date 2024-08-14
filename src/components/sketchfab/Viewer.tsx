@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { selectposeInstalled } from '../../store/voletSlice';
+import { selectPoseInstalled } from '../../store/voletSlice';
 import OverlayButtons from './OverlayButtons';
 import TextureUpdater from './TextureUpdater';
 import APIDataFetcher from './APIDataFetcher';
@@ -17,7 +17,7 @@ const Viewer: React.FC<ViewerProps> = ({ setPosition, setTarget }) => {
   const [lameFinaleTexture, setLameFinaleTexture] = useState("9a7c42640fa244fc828f6bb88c6b24ca");
   const [menuVisible, setMenuVisible] = useState(false);
 
-  const poseInstalled = useSelector(selectposeInstalled);
+  const poseInstalled = useSelector(selectPoseInstalled);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const apiClientRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(true);

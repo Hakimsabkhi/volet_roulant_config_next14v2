@@ -18,14 +18,14 @@ import {
 // Import selectors
 import {
   selectDimensions,
-  selectposeInstalled,
+  selectPoseInstalled,
   selectManoeuvre,
   selectManual,
   selectMotorise,
   selectTelecommande,
   selectInterrupteur,
   selectSortieDeCable,
-  selectlameSelected
+  selectLameSelected
 } from '../../store/voletSlice';
 
 
@@ -37,14 +37,14 @@ const getPrice = (options: productDetails[], selectedOption: string): number => 
 
 const TotalCostCalculateur: React.FC = () => {
   const dimensions = useSelector(selectDimensions);
-  const poseInstalled = useSelector(selectposeInstalled);
+  const poseInstalled = useSelector(selectPoseInstalled);
   const manoeuvreSelected = useSelector(selectManoeuvre);
   const commandeManualSelected = useSelector(selectManual);
   const optionMotorisationSelected = useSelector(selectMotorise);
   const optionTelecomandeSelected = useSelector(selectTelecommande);
   const optionInterrupteurSelected = useSelector(selectInterrupteur);
   const sortieDeCableSelected = useSelector(selectSortieDeCable);
-  const lameSelected = useSelector(selectlameSelected);
+  const lameSelected = useSelector(selectLameSelected);
 
   const [costHT, setCostHT] = useState(''); // Cost excluding VAT
   const [costTTC, setCostTTC] = useState(''); // Cost including VAT

@@ -1,13 +1,13 @@
 import React, { useState, useEffect, MouseEvent } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setposeInstalled, selectposeInstalled } from "../../store/voletSlice";
+import { setposeInstalled, selectPoseInstalled } from "../../store/voletSlice";
 import { poseOptions } from "../../assets/Data";
 import { TypeDePoseProps } from "../../interfaces";
 import Image from "next/image";
 
 function TypeDePose({ enableNextButton }: TypeDePoseProps) {
   const dispatch = useDispatch();
-  const poseInstalled = useSelector(selectposeInstalled);
+  const poseInstalled = useSelector(selectPoseInstalled);
   const [hoveredChoice, setHoveredChoice] = useState<any>(null);
   const [popupPosition, setPopupPosition] = useState<{
     top: number;

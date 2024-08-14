@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
-
+import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import { useDispatch } from 'react-redux';
+import { setVoletFromDevis } from '@/store/voletSlice';
 interface Devis {
   _id: string;
   DevisNumber: string;
@@ -29,7 +31,35 @@ interface DevisTableProps {
 }
 
 const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => {
-  if (!Array.isArray(devis) || devis.length === 0) {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const handleModify = (id: string) => {
+    const selectedDevis = devis.find(devisItem => devisItem._id === id);
+    if (selectedDevis) {
+      // Dispatch the selected devis data to populate the volet slice
+      dispatch(setVoletFromDevis({
+        lameSelected: selectedDevis.lameSelected,
+        dimensions: selectedDevis.dimensions,
+        selectedColor: {
+          coulisse: selectedDevis.selectedCoulisseColor,
+          tablier: selectedDevis.selectedTablierColor,
+          lameFinale: selectedDevis.selectedLameFinaleColor,
+        },
+        poseInstalled: selectedDevis.poseInstalled,
+        manoeuvreSelected: selectedDevis.manoeuvreSelected,
+        commandeManualSelected: selectedDevis.commandeManualSelected || "",
+        optionMotorisationSelected: selectedDevis.optionMotorisationSelected,
+        optionTelecomandeSelected: selectedDevis.optionTelecomandeSelected || "",
+        optionInterrupteurSelected: selectedDevis.optionInterrupteurSelected || "",
+        sortieDeCableSelected: selectedDevis.sortieDeCableSelected || "",
+      }));
+      // Redirect to the configurateur page
+      router.push(`/configurateur?id=${id}`);
+    }
+  };
+
+  if (devis.length === 0) {
     return <div className="mt-10 ml-20">No devis available</div>;
   }
 
@@ -55,7 +85,9 @@ const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => 
                 <th className="py-2 px-4 border-b text-sm font-bold">
                   Type d&apos;Installation
                 </th>
-                <th className="py-2 px-4 border-b text-sm font-bold">Couleurs</th>
+                <th className="py-2 px-4 border-b text-sm font-bold">
+                  Couleurs
+                </th>
                 <th className="py-2 px-4 border-b text-sm font-bold">
                   Type de Manoeuvre
                 </th>
@@ -168,7 +200,10 @@ const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => 
                   <button className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2">
                     Valider mon devis
                   </button>
-                  <button className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2">
+                  <button
+                    className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2"
+                    onClick={() => handleModify(devisItem._id)} // Attach the handleModify function
+                  >
                     Modifier
                   </button>
                   <button

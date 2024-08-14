@@ -22,7 +22,7 @@ const voletSlice = createSlice({
   name: "volet",
   initialState,
   reducers: {
-    setlameSelected: (state, action: PayloadAction<string>) => {
+    setLameSelected: (state, action: PayloadAction<string>) => {
       state.lameSelected = action.payload;
     },
     setDimensions: (state, action: PayloadAction<Partial<Dimensions>>) => {
@@ -37,46 +37,52 @@ const voletSlice = createSlice({
         state.selectedColor[category] = color;
       }
     },
-    setposeInstalled: (state, action: PayloadAction<string>) => {
+    setPoseInstalled: (state, action: PayloadAction<string>) => {
       state.poseInstalled = action.payload;
     },
-    setmanoeuvreSelected: (state, action: PayloadAction<string>) => {
+    setManoeuvreSelected: (state, action: PayloadAction<string>) => {
       state.manoeuvreSelected = action.payload;
     },
-    setcommandeManualSelected: (state, action: PayloadAction<string>) => {
+    setCommandeManualSelected: (state, action: PayloadAction<string>) => {
       state.commandeManualSelected = action.payload;
     },
-    setoptionMotorisationSelected: (state, action: PayloadAction<string>) => {
+    setOptionMotorisationSelected: (state, action: PayloadAction<string>) => {
       state.optionMotorisationSelected = action.payload;
     },
-    setoptionTelecomandeSelected: (state, action: PayloadAction<string>) => {
+    setOptionTelecommandeSelected: (state, action: PayloadAction<string>) => {
       state.optionTelecomandeSelected = action.payload;
     },
-    setoptionInterrupteurSelected: (state, action: PayloadAction<string>) => {
+    setOptionInterrupteurSelected: (state, action: PayloadAction<string>) => {
       state.optionInterrupteurSelected = action.payload;
     },
-    setsortieDeCableSelected: (state, action: PayloadAction<string>) => {
+    setSortieDeCableSelected: (state, action: PayloadAction<string>) => {
       state.sortieDeCableSelected = action.payload;
     },
+    setVoletFromDevis: (state, action: PayloadAction<VoletState>) => {
+      return { ...state, ...action.payload };
+    },
+    reset: () => initialState, // Reset the state to its initial values
   },
 });
 
 export const {
-  setlameSelected,
+  setLameSelected,
   setDimensions,
   setColor,
-  setposeInstalled,
-  setmanoeuvreSelected,
-  setcommandeManualSelected,
-  setoptionMotorisationSelected,
-  setoptionTelecomandeSelected,
-  setoptionInterrupteurSelected,
-  setsortieDeCableSelected,
+  setPoseInstalled,
+  setManoeuvreSelected,
+  setCommandeManualSelected,
+  setOptionMotorisationSelected,
+  setOptionTelecommandeSelected,
+  setOptionInterrupteurSelected,
+  setSortieDeCableSelected,
+  setVoletFromDevis,
+  reset,
 } = voletSlice.actions;
 
-export const selectlameSelected = (state: { volet: VoletState }) =>
+export const selectLameSelected = (state: { volet: VoletState }) =>
   state.volet.lameSelected;
-export const selectposeInstalled = (state: { volet: VoletState }) =>
+export const selectPoseInstalled = (state: { volet: VoletState }) =>
   state.volet.poseInstalled;
 export const selectSelectedColor = (state: { volet: VoletState }) =>
   state.volet.selectedColor;

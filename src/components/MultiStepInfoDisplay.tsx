@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useRouter } from "next/navigation"; // Import useRouter from next/navigation
+import { useRouter, useSearchParams } from "next/navigation"; // Import useRouter and useSearchParams
 import DimensionCostCalculator from "./calculator/dimensionCostCalculator";
 import {
   optionsMotorisations,
@@ -12,12 +12,8 @@ import {
   poseOptions,
   lameChoices,
 } from "../assets/Data";
-
 import { RootState } from "../store";
 
-import PDFExport from "./formulaire/PDFExport"; // Import the new component
-
-// Helper function to get the price of a selected option
 const getPrice = (options: any[], selectedOption: string) => {
   const option = options.find((option) => option.label === selectedOption);
   return option ? option.price : 0;
@@ -25,8 +21,10 @@ const getPrice = (options: any[], selectedOption: string) => {
 
 const MultiStepInfoDisplay: React.FC = () => {
   const [dimensionCost, setDimensionCost] = useState(0);
+  const [devisId, setDevisId] = useState<string | null>(null);
   const router = useRouter(); // Initialize useRouter
-
+  const searchParams = useSearchParams(); // Use useSearchParams to get query parameters
+  
   const selectedCoulisseColor = useSelector(
     (state: RootState) => state.volet.selectedColor.coulisse
   );
@@ -83,7 +81,6 @@ const MultiStepInfoDisplay: React.FC = () => {
     commandeManualSelected
   );
 
-  // Simplistic total price calculation for demonstration
   const totalPrice =
     lameSelectedPrice +
     poseInstalledPrice +
@@ -95,7 +92,16 @@ const MultiStepInfoDisplay: React.FC = () => {
     commandeManualSelectedPrice +
     dimensionCost;
 
+  useEffect(() => {
+    const id = searchParams.get("id");
+    if (id) {
+      setDevisId(id);
+      console.log("Devis ID:", id);
+    }
+  }, [searchParams]);
+
   const handleSubmit = async () => {
+    // Data for creating a new devis
     const data = {
       selectedCoulisseColor,
       selectedTablierColor,
@@ -112,15 +118,24 @@ const MultiStepInfoDisplay: React.FC = () => {
       dimensionCost,
       totalPrice,
     };
-  
+
     console.log("Submitting data:", data);
-  
-    // Basic client-side validation
-    if (!selectedCoulisseColor || !selectedTablierColor || !selectedLameFinaleColor || !lameSelected || !dimensions || !poseInstalled || !manoeuvreSelected || !dimensionCost || !totalPrice) {
+
+    if (
+      !selectedCoulisseColor ||
+      !selectedTablierColor ||
+      !selectedLameFinaleColor ||
+      !lameSelected ||
+      !dimensions ||
+      !poseInstalled ||
+      !manoeuvreSelected ||
+      !dimensionCost ||
+      !totalPrice
+    ) {
       alert("Please fill in all required fields");
       return;
     }
-  
+
     try {
       const response = await fetch("/api/saveData", {
         method: "POST",
@@ -129,11 +144,11 @@ const MultiStepInfoDisplay: React.FC = () => {
         },
         body: JSON.stringify(data),
       });
-  
+
       if (!response.ok) {
         throw new Error("Error saving data");
       }
-  
+
       alert("Data saved successfully!");
       router.push("/"); // Redirect to home page after saving data
     } catch (error) {
@@ -141,7 +156,68 @@ const MultiStepInfoDisplay: React.FC = () => {
       alert("Failed to save data");
     }
   };
-  
+
+  const handleSaveChanges = async () => {
+    if (!devisId) {
+      alert("Devis ID is missing. Unable to update.");
+      return;
+    }
+
+    const data = {
+      id: devisId,
+      selectedCoulisseColor,
+      selectedTablierColor,
+      selectedLameFinaleColor,
+      lameSelected,
+      dimensions,
+      poseInstalled,
+      manoeuvreSelected,
+      commandeManualSelected,
+      optionMotorisationSelected,
+      optionTelecomandeSelected,
+      optionInterrupteurSelected,
+      sortieDeCableSelected,
+      dimensionCost,
+      totalPrice,
+    };
+
+    console.log("Submitting data:", data);
+
+    if (
+      !selectedCoulisseColor ||
+      !selectedTablierColor ||
+      !selectedLameFinaleColor ||
+      !lameSelected ||
+      !dimensions ||
+      !poseInstalled ||
+      !manoeuvreSelected ||
+      !dimensionCost ||
+      !totalPrice
+    ) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/updateDevis", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error updating data");
+      }
+
+      alert("Changes saved successfully!");
+      router.push("/"); // Redirect to home page after saving changes
+    } catch (error) {
+      console.error(error);
+      alert("Failed to save changes");
+    }
+  };
 
   return (
     <div className="flex flex-col text-left gap-[10px] font-normal">
@@ -229,18 +305,21 @@ const MultiStepInfoDisplay: React.FC = () => {
         </tbody>
       </table>
 
-      {/* This component will calculate the dimension cost and update the state */}
       <DimensionCostCalculator
         dimensions={dimensions}
         onCostCalculated={setDimensionCost}
       />
 
-      {/* Button to export to PDF */}
-      {/* <PDFExport dimensionCost={dimensionCost} totalPrice={totalPrice} /> */}
-
-      <button onClick={handleSubmit} className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2">
-        sauvegarde mon devis et quitter
-      </button>
+      {/* Conditionally render the appropriate button */}
+      {devisId ? (
+        <button onClick={handleSaveChanges} className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2">
+          Save Changes
+        </button>
+      ) : (
+        <button onClick={handleSubmit} className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2">
+          sauvegarde mon devis et quitter
+        </button>
+      )}
     </div>
   );
 };
