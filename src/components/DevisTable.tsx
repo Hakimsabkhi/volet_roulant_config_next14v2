@@ -1,8 +1,10 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import { useRouter } from "next/navigation";
 import { useDispatch } from 'react-redux';
 import { setVoletFromDevis } from '@/store/voletSlice';
+import { format } from 'date-fns'; // Import date-fns for date formatting
+
 interface Devis {
   _id: string;
   DevisNumber: string;
@@ -23,6 +25,7 @@ interface Devis {
   sortieDeCableSelected?: string;
   dimensionCost: number;
   totalPrice: number;
+  createdAt: Date;
 }
 
 interface DevisTableProps {
@@ -37,7 +40,6 @@ const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => 
   const handleModify = (id: string) => {
     const selectedDevis = devis.find(devisItem => devisItem._id === id);
     if (selectedDevis) {
-      // Dispatch the selected devis data to populate the volet slice
       dispatch(setVoletFromDevis({
         lameSelected: selectedDevis.lameSelected,
         dimensions: selectedDevis.dimensions,
@@ -54,7 +56,6 @@ const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => 
         optionInterrupteurSelected: selectedDevis.optionInterrupteurSelected || "",
         sortieDeCableSelected: selectedDevis.sortieDeCableSelected || "",
       }));
-      // Redirect to the configurateur page
       router.push(`/configurateur?id=${id}`);
     }
   };
@@ -73,6 +74,9 @@ const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => 
           <h2 className="text-2xl font-bold mb-4">
             Devis Numéro: {devisItem.DevisNumber}
           </h2>
+          <p className="text-xl">
+            Date de creation: {format(new Date(devisItem.createdAt), 'dd/MM/yyyy')}
+          </p>
           <table className="w-full bg-white">
             <thead>
               <tr>
@@ -202,7 +206,7 @@ const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => 
                   </button>
                   <button
                     className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2"
-                    onClick={() => handleModify(devisItem._id)} // Attach the handleModify function
+                    onClick={() => handleModify(devisItem._id)}
                   >
                     Modifier
                   </button>

@@ -25,6 +25,7 @@ interface Devis {
   sortieDeCableSelected?: string;
   dimensionCost: number;
   totalPrice: number;
+  createdAt: Date;
 }
 
 const Home: React.FC = () => {

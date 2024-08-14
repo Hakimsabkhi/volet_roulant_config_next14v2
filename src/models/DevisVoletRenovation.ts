@@ -1,4 +1,3 @@
-// src/models/DevisVoletRenovation.ts
 import mongoose, { Schema, Document, model, Types } from 'mongoose';
 
 interface IDevisVoletRenovation extends Document {
@@ -21,6 +20,7 @@ interface IDevisVoletRenovation extends Document {
   sortieDeCableSelected?: string;
   dimensionCost: number;
   totalPrice: number;
+  createdAt: Date;
 }
 
 const DevisVoletRenovationSchema: Schema = new Schema({
@@ -43,6 +43,7 @@ const DevisVoletRenovationSchema: Schema = new Schema({
   sortieDeCableSelected: { type: String },
   dimensionCost: { type: Number, required: true },
   totalPrice: { type: Number, required: true },
+  createdAt: { type: Date, default: Date.now, required: true },
 });
 
 // Compound index to ensure DevisNumber is unique for each user
