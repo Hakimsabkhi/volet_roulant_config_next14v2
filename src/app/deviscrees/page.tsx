@@ -130,8 +130,8 @@ const DevisCrees: React.FC = () => {
   }
 
   return (
-    <main className="flex justify-center">
-        <div className=" w-[95%] flex flex-col gap-8 justify-center">
+    <main className="flex justify-center h-full">
+        <div className=" w-[95%] h-full flex flex-col gap-8 justify-between items-center">
           <FilterBar onFilterChange={handleFilterChange} />
           <DevisTable devis={paginatedDevis} handleDelete={handleDelete} />
           <Pagination

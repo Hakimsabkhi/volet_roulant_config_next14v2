@@ -69,7 +69,7 @@ const DevisTable: React.FC<DevisTableProps> = ({
   };
 
   if (devis.length === 0) {
-    return <div className="mt-10 ml-20">No devis available</div>;
+    return <div>No devis available</div>;
   }
 
   return (
