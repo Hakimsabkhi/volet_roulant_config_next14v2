@@ -1,9 +1,10 @@
 "use client";
+
 import React from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch } from 'react-redux';
-import { setVoletFromDevis } from '@/store/voletSlice';
-import { format } from 'date-fns'; // Import date-fns for date formatting
+import { useDispatch } from "react-redux";
+import { setVoletFromDevis } from "@/store/voletSlice";
+import { format } from "date-fns"; // Import date-fns for date formatting
 
 interface Devis {
   _id: string;
@@ -33,29 +34,36 @@ interface DevisTableProps {
   handleDelete: (id: string) => void;
 }
 
-const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => {
+const DevisTable: React.FC<DevisTableProps> = ({
+  devis = [],
+  handleDelete,
+}) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
   const handleModify = (id: string) => {
-    const selectedDevis = devis.find(devisItem => devisItem._id === id);
+    const selectedDevis = devis.find((devisItem) => devisItem._id === id);
     if (selectedDevis) {
-      dispatch(setVoletFromDevis({
-        lameSelected: selectedDevis.lameSelected,
-        dimensions: selectedDevis.dimensions,
-        selectedColor: {
-          coulisse: selectedDevis.selectedCoulisseColor,
-          tablier: selectedDevis.selectedTablierColor,
-          lameFinale: selectedDevis.selectedLameFinaleColor,
-        },
-        poseInstalled: selectedDevis.poseInstalled,
-        manoeuvreSelected: selectedDevis.manoeuvreSelected,
-        commandeManualSelected: selectedDevis.commandeManualSelected || "",
-        optionMotorisationSelected: selectedDevis.optionMotorisationSelected,
-        optionTelecomandeSelected: selectedDevis.optionTelecomandeSelected || "",
-        optionInterrupteurSelected: selectedDevis.optionInterrupteurSelected || "",
-        sortieDeCableSelected: selectedDevis.sortieDeCableSelected || "",
-      }));
+      dispatch(
+        setVoletFromDevis({
+          lameSelected: selectedDevis.lameSelected,
+          dimensions: selectedDevis.dimensions,
+          selectedColor: {
+            coulisse: selectedDevis.selectedCoulisseColor,
+            tablier: selectedDevis.selectedTablierColor,
+            lameFinale: selectedDevis.selectedLameFinaleColor,
+          },
+          poseInstalled: selectedDevis.poseInstalled,
+          manoeuvreSelected: selectedDevis.manoeuvreSelected,
+          commandeManualSelected: selectedDevis.commandeManualSelected || "",
+          optionMotorisationSelected: selectedDevis.optionMotorisationSelected,
+          optionTelecomandeSelected:
+            selectedDevis.optionTelecomandeSelected || "",
+          optionInterrupteurSelected:
+            selectedDevis.optionInterrupteurSelected || "",
+          sortieDeCableSelected: selectedDevis.sortieDeCableSelected || "",
+        })
+      );
       router.push(`/configurateur?id=${id}`);
     }
   };
@@ -65,22 +73,25 @@ const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => 
   }
 
   return (
-    <div className="mt-10 ml-20 flex flex-col gap-3 mb-8">
+    <div className="flex flex-col gap-3 mb-8 items-center w-full">
       {devis.map((devisItem) => (
         <div
           key={devisItem._id}
-          className="w-[95%] p-4 flex flex-col gap-6 border rounded-md border-black"
+          className="w-full p-4 flex flex-col gap-6 border rounded-md border-black"
         >
-          <h2 className="text-2xl font-bold mb-4">
-            Devis Numéro: {devisItem.DevisNumber}
-          </h2>
-          <p className="text-xl">
-            Date de creation: {format(new Date(devisItem.createdAt), 'dd/MM/yyyy')}
-          </p>
+          <div className="flex justify-between">
+            <h2 className="text-xl font-bold mb-4">
+              Devis Numéro: {devisItem.DevisNumber}
+            </h2>
+            <p className="text-xl">
+              Date de creation:{" "}
+              {format(new Date(devisItem.createdAt), "dd/MM/yyyy")}
+            </p>
+          </div>
           <table className="w-full bg-white">
             <thead>
               <tr>
-                <th className="py-2 px-4 border-b text-sm font-bold ">
+                <th className="py-2 px-4 border-b text-sm font-bold">
                   Type de Lame
                 </th>
                 <th className="py-2 px-4 border-b text-sm font-bold">
@@ -134,29 +145,29 @@ const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => 
                   <br />
                   Hauteur: {devisItem.dimensions.Hauteur} mm
                 </td>
-                <td className="py-2 px-4 border-b text-sm border-black ">
+                <td className="py-2 px-4 border-b text-sm border-black">
                   {devisItem.poseInstalled}
                 </td>
-                <td className="py-2 px-4 border-b text-sm border-black ">
+                <td className="py-2 px-4 border-b text-sm border-black">
                   Coulisse: {devisItem.selectedCoulisseColor}
                   <br /> Tablier: {devisItem.selectedTablierColor}
                   <br /> Lame Finale: {devisItem.selectedLameFinaleColor}
                 </td>
-                <td className="py-2 px-4 border-b text-sm border-black ">
+                <td className="py-2 px-4 border-b text-sm border-black">
                   {devisItem.manoeuvreSelected}
                 </td>
                 {devisItem.manoeuvreSelected === "Manuel" && (
-                  <td className="py-2 px-4 border-b text-sm border-black ">
+                  <td className="py-2 px-4 border-b text-sm border-black">
                     {devisItem.commandeManualSelected || "N/A"}
                   </td>
                 )}
                 {devisItem.manoeuvreSelected === "Motorisé" && (
                   <>
-                    <td className="py-2 px-4 border-b text-sm border-black ">
+                    <td className="py-2 px-4 border-b text-sm border-black">
                       {devisItem.optionMotorisationSelected}
                     </td>
                     {devisItem.optionMotorisationSelected === "Radio" && (
-                      <td className="py-2 px-4 border-b text-sm border-black ">
+                      <td className="py-2 px-4 border-b text-sm border-black">
                         {devisItem.optionTelecomandeSelected || "N/A"}
                       </td>
                     )}
@@ -165,7 +176,7 @@ const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => 
                         <td className="py-2 px-4 border-b text-sm border-black">
                           {devisItem.optionInterrupteurSelected || "N/A"}
                         </td>
-                        <td className="py-2 px-4 border-b text-sm border-black ">
+                        <td className="py-2 px-4 border-b text-sm border-black">
                           {devisItem.sortieDeCableSelected || "N/A"}
                         </td>
                       </>
@@ -178,7 +189,7 @@ const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => 
           <table className="w-[45%]">
             <thead>
               <tr>
-                <th className="py-2 px-4 border-b bg-secondary text-sm font-bold ">
+                <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">
                   Total HT
                 </th>
                 <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">
@@ -197,12 +208,12 @@ const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => 
               </tr>
             </tbody>
           </table>
-          <table className="w-[45%]">
+          <table className="w-full">
             <tbody>
-              <tr>
-                <td className="py-2 px-4 border-b  text-sm font-bold flex gap-5 ">
+              <tr className="flex justify-between">
+                <td className="w-[45%] py-2 px-4 border-b text-sm font-bold flex gap-5">
                   <button className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2">
-                    Valider mon devis
+                    Ajouter un Adresse
                   </button>
                   <button
                     className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2"
@@ -215,6 +226,11 @@ const DevisTable: React.FC<DevisTableProps> = ({ devis = [], handleDelete }) => 
                     onClick={() => handleDelete(devisItem._id)}
                   >
                     Delete
+                  </button>
+                </td>
+                <td className="w-[20%] py-2 px-4 border-b text-sm font-bold flex gap-5">
+                  <button className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2">
+                    Approuvés mon devis
                   </button>
                 </td>
               </tr>

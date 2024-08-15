@@ -3,6 +3,7 @@ import { Poppins } from 'next/font/google';
 import './globals.css';
 import SessionProviderWrapper from '../components/SessionProviderWrapper';
 import Providers from '../components/Providers';
+import ClientLayout from '@/components/ClientLayout'; // Import the client component
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
 
@@ -20,7 +21,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={poppins.className}>
         <SessionProviderWrapper>
-          <Providers>{children}</Providers>
+          <Providers>
+            <ClientLayout>{children}</ClientLayout>
+          </Providers>
         </SessionProviderWrapper>
       </body>
     </html>

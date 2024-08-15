@@ -150,7 +150,7 @@ const MultiStepInfoDisplay: React.FC = () => {
       }
 
       alert("Data saved successfully!");
-      router.push("/"); // Redirect to home page after saving data
+      router.push("/deviscrees"); // Redirect to home page after saving data
     } catch (error) {
       console.error(error);
       alert("Failed to save data");
@@ -212,7 +212,7 @@ const MultiStepInfoDisplay: React.FC = () => {
       }
 
       alert("Changes saved successfully!");
-      router.push("/"); // Redirect to home page after saving changes
+      router.push("/deviscrees"); // Redirect to home page after saving changes
     } catch (error) {
       console.error(error);
       alert("Failed to save changes");

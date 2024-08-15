@@ -61,8 +61,8 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ userName, userEmail }) => {
           className="absolute z-10 top-20 bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
         >
           <div className="px-4 py-3 text-sm text-gray-900">
-            <div>{userName}</div> {/* Display user's name */}
-            <div className="font-medium truncate">{userEmail}</div> {/* Display user's email */}
+            <div>{userName}</div>
+            <div className="font-medium truncate">{userEmail}</div>
           </div>
           <ul
             className="py-2 text-sm text-gray-700"
@@ -73,7 +73,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ userName, userEmail }) => {
                 href="/"
                 className="block px-4 py-2 hover:bg-gray-100"
               >
-                Dashboard
+              Page d&apos;accueil
               </a>
             </li>
             <li>
