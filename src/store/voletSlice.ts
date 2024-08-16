@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { VoletState, Dimensions, Colors } from "../interfaces";
 
+
 const initialState: VoletState = {
   lameSelected: "",
   dimensions: { Largeur: 1000, Hauteur: 1000 },
@@ -16,7 +17,9 @@ const initialState: VoletState = {
   optionTelecomandeSelected: "",
   optionInterrupteurSelected: "",
   sortieDeCableSelected: "",
+  multiplier: 1,  // <-- Add this line
 };
+
 
 const voletSlice = createSlice({
   name: "volet",
@@ -36,6 +39,10 @@ const voletSlice = createSlice({
       if (category in state.selectedColor) {
         state.selectedColor[category] = color;
       }
+    },
+    setMultiplier: (state, action: PayloadAction<number>) => {
+      state.multiplier = action.payload;
+      console.log("Multiplier set to:", action.payload); // <-- Console log
     },
     setPoseInstalled: (state, action: PayloadAction<string>) => {
       state.poseInstalled = action.payload;
@@ -76,6 +83,7 @@ export const {
   setOptionTelecommandeSelected,
   setOptionInterrupteurSelected,
   setSortieDeCableSelected,
+  setMultiplier,
   setVoletFromDevis,
   reset,
 } = voletSlice.actions;
@@ -104,5 +112,7 @@ export const selectInterrupteur = (state: { volet: VoletState }) =>
   state.volet.optionInterrupteurSelected;
 export const selectSortieDeCable = (state: { volet: VoletState }) =>
   state.volet.sortieDeCableSelected;
+export const selectMultiplier = (state: { volet: VoletState }) =>
+  state.volet.multiplier;
 
 export default voletSlice.reducer;

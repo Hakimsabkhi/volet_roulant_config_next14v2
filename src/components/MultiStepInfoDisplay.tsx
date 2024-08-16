@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { selectMultiplier } from "../store/voletSlice"; // Import the multiplier selector
 import { useRouter, useSearchParams } from "next/navigation"; // Import useRouter and useSearchParams
 import DimensionCostCalculator from "./calculator/dimensionCostCalculator";
 import {
@@ -24,7 +25,8 @@ const MultiStepInfoDisplay: React.FC = () => {
   const [devisId, setDevisId] = useState<string | null>(null);
   const router = useRouter(); // Initialize useRouter
   const searchParams = useSearchParams(); // Use useSearchParams to get query parameters
-  
+  const multiplier = useSelector(selectMultiplier); // Access the multiplier from Redux
+
   const selectedCoulisseColor = useSelector(
     (state: RootState) => state.volet.selectedColor.coulisse
   );
@@ -90,7 +92,7 @@ const MultiStepInfoDisplay: React.FC = () => {
     interrupteurPrice +
     sortieDeCablePrice +
     commandeManualSelectedPrice +
-    dimensionCost;
+    dimensionCost ;
 
   useEffect(() => {
     const id = searchParams.get("id");
@@ -117,10 +119,11 @@ const MultiStepInfoDisplay: React.FC = () => {
       sortieDeCableSelected,
       dimensionCost,
       totalPrice,
+      multiplier, // Add the multiplier to the data
     };
-
+  
     console.log("Submitting data:", data);
-
+  
     if (
       !selectedCoulisseColor ||
       !selectedTablierColor ||
@@ -130,12 +133,13 @@ const MultiStepInfoDisplay: React.FC = () => {
       !poseInstalled ||
       !manoeuvreSelected ||
       !dimensionCost ||
-      !totalPrice
+      !totalPrice ||
+      !multiplier // Add multiplier to the validation
     ) {
       alert("Please fill in all required fields");
       return;
     }
-
+  
     try {
       const response = await fetch("/api/saveData", {
         method: "POST",
@@ -144,18 +148,18 @@ const MultiStepInfoDisplay: React.FC = () => {
         },
         body: JSON.stringify(data),
       });
-
+  
       if (!response.ok) {
         throw new Error("Error saving data");
       }
-
+  
       alert("Data saved successfully!");
-      router.push("/deviscrees"); // Redirect to home page after saving data
+      router.push("/deviscrees"); // Redirect to the created devis page after saving data
     } catch (error) {
       console.error(error);
       alert("Failed to save data");
     }
-  };
+  };  
 
   const handleSaveChanges = async () => {
     if (!devisId) {
@@ -295,12 +299,16 @@ const MultiStepInfoDisplay: React.FC = () => {
       <table className="w-[60%] text-right ml-auto mr-0">
         <tbody>
           <tr>
+            <th>Nombres d&apos;unités</th>
+            <td className="price">{multiplier}</td>
+          </tr>
+          <tr>
             <th>Total HT</th>
-            <td className="price">{totalPrice.toFixed(2)}€</td>
+            <td className="price">{(totalPrice * multiplier).toFixed(2)}€</td>
           </tr>
           <tr>
             <th>Total TTC</th>
-            <td className="price">{(totalPrice * 1.2).toFixed(2)}€</td>
+            <td className="price">{(totalPrice * multiplier * 1.2).toFixed(2)}€</td>
           </tr>
         </tbody>
       </table>

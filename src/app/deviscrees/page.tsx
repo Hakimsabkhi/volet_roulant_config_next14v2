@@ -5,30 +5,9 @@ import { useSession } from "next-auth/react";
 import DevisTable from "@/components/DevisTable";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import FilterBar from "@/components/FilterBar";
-import Pagination from "@/components/Pagination"; // Import Pagination
+import Pagination from "@/components/Pagination"; 
+import { Devis } from "../../interfaces";// Import Pagination
 
-interface Devis {
-  _id: string;
-  DevisNumber: string;
-  selectedCoulisseColor: string;
-  selectedTablierColor: string;
-  selectedLameFinaleColor: string;
-  lameSelected: string;
-  dimensions: {
-    Largeur: number;
-    Hauteur: number;
-  };
-  poseInstalled: string;
-  manoeuvreSelected: string;
-  commandeManualSelected?: string;
-  optionMotorisationSelected: string;
-  optionTelecomandeSelected?: string;
-  optionInterrupteurSelected?: string;
-  sortieDeCableSelected?: string;
-  dimensionCost: number;
-  totalPrice: number;
-  createdAt: Date;
-}
 
 const ITEMS_PER_PAGE = 3;
 

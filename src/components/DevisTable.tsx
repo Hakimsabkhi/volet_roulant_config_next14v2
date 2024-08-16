@@ -5,29 +5,12 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setVoletFromDevis } from "@/store/voletSlice";
 import { format } from "date-fns"; // Import date-fns for date formatting
+import { Devis } from "@/interfaces";
+// src/interfaces/types.ts
 
-interface Devis {
-  _id: string;
-  DevisNumber: string;
-  selectedCoulisseColor: string;
-  selectedTablierColor: string;
-  selectedLameFinaleColor: string;
-  lameSelected: string;
-  dimensions: {
-    Largeur: number;
-    Hauteur: number;
-  };
-  poseInstalled: string;
-  manoeuvreSelected: string;
-  commandeManualSelected?: string;
-  optionMotorisationSelected: string;
-  optionTelecomandeSelected?: string;
-  optionInterrupteurSelected?: string;
-  sortieDeCableSelected?: string;
-  dimensionCost: number;
-  totalPrice: number;
-  createdAt: Date;
-}
+
+
+
 
 interface DevisTableProps {
   devis: Devis[];
@@ -57,16 +40,16 @@ const DevisTable: React.FC<DevisTableProps> = ({
           manoeuvreSelected: selectedDevis.manoeuvreSelected,
           commandeManualSelected: selectedDevis.commandeManualSelected || "",
           optionMotorisationSelected: selectedDevis.optionMotorisationSelected,
-          optionTelecomandeSelected:
-            selectedDevis.optionTelecomandeSelected || "",
-          optionInterrupteurSelected:
-            selectedDevis.optionInterrupteurSelected || "",
+          optionTelecomandeSelected: selectedDevis.optionTelecomandeSelected || "",
+          optionInterrupteurSelected: selectedDevis.optionInterrupteurSelected || "",
           sortieDeCableSelected: selectedDevis.sortieDeCableSelected || "",
+          multiplier: selectedDevis.multiplier, // Include multiplier
         })
       );
       router.push(`/configurateur?id=${id}`);
     }
   };
+  
 
   if (devis.length === 0) {
     return <div>No devis available</div>;
@@ -187,27 +170,34 @@ const DevisTable: React.FC<DevisTableProps> = ({
             </tbody>
           </table>
           <table className="w-[45%]">
-            <thead>
-              <tr>
-                <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">
-                  Total HT
-                </th>
-                <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">
-                  Total TTC
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="py-2 px-4 border-b text-sm font-bold border-black">
-                  {devisItem.totalPrice.toFixed(2)}€
-                </td>
-                <td className="py-2 px-4 border-b text-sm font-bold border-black">
-                  {(devisItem.totalPrice * 1.2).toFixed(2)}€
-                </td>
-              </tr>
-            </tbody>
-          </table>
+  <thead>
+    <tr>
+    <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">
+        Nombres d&apos;unités
+      </th>
+      <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">
+        Total HT
+      </th>
+      <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">
+        Total TTC
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <td className="py-2 px-4 border-b text-sm font-bold border-black">
+        {devisItem.multiplier}
+      </td>
+      <td className="py-2 px-4 border-b text-sm font-bold border-black">
+        {`${devisItem.totalPrice.toFixed(2)} * ${devisItem.multiplier} = ${(devisItem.totalPrice * devisItem.multiplier).toFixed(2)}€`}
+      </td>
+      <td className="py-2 px-4 border-b text-sm font-bold border-black">
+        {(devisItem.totalPrice * devisItem.multiplier * 1.2).toFixed(2)}€
+      </td>
+    </tr>
+  </tbody>
+</table>
+
           <table className="w-full">
             <tbody>
               <tr className="flex justify-between">

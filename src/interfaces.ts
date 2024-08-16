@@ -168,9 +168,9 @@ export interface Colors {
 }
 
 export interface VoletState {
-  selectedColor: Colors;
   lameSelected: string;
   dimensions: Dimensions;
+  selectedColor: Colors;
   poseInstalled: string;
   manoeuvreSelected: string;
   commandeManualSelected: string;
@@ -178,6 +178,7 @@ export interface VoletState {
   optionTelecomandeSelected: string;
   optionInterrupteurSelected: string;
   sortieDeCableSelected: string;
+  multiplier: number; // <-- Add this line
 }
 
 
@@ -304,3 +305,28 @@ export interface MongooseGlobal extends NodeJS.Global {
 }
 
 
+// src/interfaces/types.ts
+
+export interface Devis {
+  _id: string;
+  DevisNumber: string;
+  selectedCoulisseColor: string;
+  selectedTablierColor: string;
+  selectedLameFinaleColor: string;
+  lameSelected: string;
+  dimensions: {
+    Largeur: number;
+    Hauteur: number;
+  };
+  poseInstalled: string;
+  manoeuvreSelected: string;
+  commandeManualSelected?: string;
+  optionMotorisationSelected: string;
+  optionTelecomandeSelected?: string;
+  optionInterrupteurSelected?: string;
+  sortieDeCableSelected?: string;
+  dimensionCost: number;
+  totalPrice: number;
+  multiplier: number; // Ensure multiplier is included
+  createdAt: Date;
+}

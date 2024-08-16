@@ -20,8 +20,10 @@ interface IDevisVoletRenovation extends Document {
   sortieDeCableSelected?: string;
   dimensionCost: number;
   totalPrice: number;
+  multiplier: number;
   createdAt: Date;
 }
+
 
 const DevisVoletRenovationSchema: Schema = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -43,8 +45,10 @@ const DevisVoletRenovationSchema: Schema = new Schema({
   sortieDeCableSelected: { type: String },
   dimensionCost: { type: Number, required: true },
   totalPrice: { type: Number, required: true },
+  multiplier: { type: Number, required: true }, // <-- Add this line
   createdAt: { type: Date, default: Date.now, required: true },
 });
+
 
 // Compound index to ensure DevisNumber is unique for each user
 DevisVoletRenovationSchema.index({ user: 1, DevisNumber: 1 }, { unique: true });
