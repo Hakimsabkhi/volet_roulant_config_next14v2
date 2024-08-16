@@ -47,13 +47,14 @@ function TypeDePose({ enableNextButton }: TypeDePoseProps) {
             onMouseLeave={() => setHoveredChoice(null)}
           >
             <Image
-        src={choice.image}
-        alt={choice.label}
-        width={100}
-        height={100}
-        className="w-12 h-auto md:w-16 lg:w-20 xl:w-24 rounded-[5px]"
-        style={{ objectFit: 'contain' }}
-      />
+              loading="eager"
+              src={choice.image}
+              alt={choice.label}
+              width={100}
+              height={100}
+              className="w-12 h-auto md:w-16 lg:w-20 xl:w-24 rounded-[5px]"
+              style={{ objectFit: "contain" }}
+            />
 
             <div className="flex flex-col justify-center items-center text-center gap-[5px] ">
               <div>

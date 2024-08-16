@@ -53,12 +53,12 @@ const ConfigurateurContent: React.FC = () => {
   }, [dispatch, searchParams]);
 
   if (status === "loading") {
-    return <p>Loading...</p>;
+  return;
   }
 
   if (!session) {
     router.push("/auth/signin"); // Redirect to sign-in if not authenticated
-    return <p>Redirecting to sign-in...</p>;
+    return;
   }
 
   return (
