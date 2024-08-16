@@ -1,4 +1,3 @@
-/* src/app/configurateur/page.tsx */
 "use client";
 
 import React, { useEffect, useState, Suspense } from 'react';
@@ -43,6 +42,7 @@ const ConfigurateurContent: React.FC = () => {
               optionTelecomandeSelected: selectedDevis.optionTelecomandeSelected || "",
               optionInterrupteurSelected: selectedDevis.optionInterrupteurSelected || "",
               sortieDeCableSelected: selectedDevis.sortieDeCableSelected || "",
+              multiplier: selectedDevis.multiplier || 1, // Include multiplier, default to 1 if not present
             }));
           }
         })
@@ -53,7 +53,7 @@ const ConfigurateurContent: React.FC = () => {
   }, [dispatch, searchParams]);
 
   if (status === "loading") {
-  return;
+    return;
   }
 
   if (!session) {
