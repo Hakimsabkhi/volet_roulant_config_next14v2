@@ -60,7 +60,7 @@ const SignInPage: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md h-[450px]">
         <h1 className="text-2xl max-md:text-xl text-center font-bold mb-6">Sign in</h1>
         {error && (
           <div className="bg-red-500 text-white p-3 rounded mb-4 text-center">
@@ -124,7 +124,7 @@ const SignInPage: React.FC = () => {
               onClick={() => router.push('/auth/signup')}
               className="text-blue-600 hover:text-blue-400 font-bold py-2 px-4 w-full focus:shadow-outline"
             >
-              Dont have an account? Sign Up
+              Dont have an account ? Sign Up
             </button>
           </div>
         </form>

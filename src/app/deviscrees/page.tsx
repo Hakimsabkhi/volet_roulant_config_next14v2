@@ -1,4 +1,4 @@
-"use client";
+"use client"; // Mark this file as a client component
 
 import React, { useEffect, useState, useMemo } from "react";
 import { useSession } from "next-auth/react";
@@ -30,7 +30,7 @@ interface Devis {
   createdAt: Date;
 }
 
-const ITEMS_PER_PAGE = 3; // Define how many items you want per page
+const ITEMS_PER_PAGE = 3;
 
 const DevisCrees: React.FC = () => {
   const { data: session, status } = useSession();
@@ -42,7 +42,7 @@ const DevisCrees: React.FC = () => {
     month: number;
     year: number;
   }>();
-  const [currentPage, setCurrentPage] = useState(1); // State to track current page
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchData = async () => {
     try {
@@ -118,7 +118,7 @@ const DevisCrees: React.FC = () => {
         throw new Error("Error deleting data");
       }
 
-      // Remove the deleted item from the state
+      // Optimistically update the local state
       setDevis(devis.filter((devisItem) => devisItem._id !== id));
     } catch (error) {
       console.error("Failed to delete data:", error);
@@ -126,19 +126,19 @@ const DevisCrees: React.FC = () => {
   };
 
   if (status === "loading" || loading) {
-    return <LoadingSpinner />; // Show a loading state while the session or data is being fetched
+    return <LoadingSpinner />;
   }
 
   return (
     <main className="flex justify-center h-full">
-        <div className=" w-[95%] h-full flex flex-col gap-8 justify-between items-center">
-          <FilterBar onFilterChange={handleFilterChange} />
-          <DevisTable devis={paginatedDevis} handleDelete={handleDelete} />
-          <Pagination
-            currentPage={currentPage}
-            totalPages={Math.ceil(filteredDevis.length / ITEMS_PER_PAGE)}
-            onPageChange={setCurrentPage}
-          />      
+      <div className="w-[95%] h-full flex flex-col gap-8 justify-between items-center">
+        <FilterBar onFilterChange={handleFilterChange} />
+        <DevisTable devis={paginatedDevis} handleDelete={handleDelete} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil(filteredDevis.length / ITEMS_PER_PAGE)}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </main>
   );
