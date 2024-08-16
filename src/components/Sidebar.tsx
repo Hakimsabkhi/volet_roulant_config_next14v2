@@ -4,7 +4,7 @@ const Sidebar: React.FC = () => {
   return (
     <div className="fixed h-full w-60 bg-secondary text-white flex flex-col">
       <div className="p-6 text-2xl mt-10 font-bold uppercase">
-        Mes devis
+        Volet Store
       </div>
       <hr className="w-2/3 ml-6 border-t-2 border-gray-300" />
       <nav className="flex-grow">

@@ -51,7 +51,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ userName, userEmail }) => {
         className="w-[50px] h-[50px] bg-none border-none cursor-pointer flex items-center justify-center bg-cbutton shadow-[0_2px_6px_rgba(0,0,0,0.952)] rounded-[4px] transition-shadow duration-300 ease z-[1000] hover:bg-cwhite focus:bg-cwhite"
         type="button"
       >
-        <Image src={userIcon} alt="Config Icon" className="button-icon" width={40} height={40} />
+        <Image src={userIcon} loading="eager" alt="Config Icon" className="button-icon" width={40} height={40} />
       </button>
 
       {/* Dropdown menu */}

@@ -39,7 +39,7 @@ const Information: React.FC<InformationProps> = ({ onClose }) => {
     <form className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col justify-around z-[1000] w-[40%] h-fit p-[8px] bg-cbutton rounded-[5px] shadow-[0_4px_8px_rgba(0,0,0,0.1)] items-center gap-[20px] max-md:w-[90%]" onSubmit={handleSubmit}>
       <div className="flex justify-end w-full h-[40px]">
         <button type="button" className="close-button" onClick={handleClose}>
-        <Image src={exitIcon} alt="Outside View" className="button-close" width={40} height={40}/>
+        <Image src={exitIcon} loading="eager" alt="Outside View" className="button-close" width={40} height={40}/>
         </button>
       </div>
       <div className="flex flex-col w-[90%] gap-[5px]">
