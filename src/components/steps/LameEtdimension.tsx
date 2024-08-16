@@ -96,24 +96,27 @@ const LameEtDimension: React.FC<LameEtDimensionProps> = ({
             onMouseLeave={() => setHoveredChoice(null)}
           >
             <Image
+              loading="eager"
               src={choice.image}
               alt={choice.label}
               className="max-md:hidden"
               width={70}
               style={{ width: "auto", height: "auto" }}
             />
-            <div className="flex flex-col justify-center items-center gap-[5px] w-full">      
-                <h3 className="text-base">{choice.label}</h3>
-                <input
-                  type="checkbox"
-                  id={`checkbox-${choice.label}`}
-                  name={`checkbox-${choice.label}`}
-                  checked={lameSelected === choice.label}
-                  onChange={() => handleLameChoice(choice)}
-                  className="hidden"
-                  required
-                />
-              <p className="text-xs font-extralight max-md:hidden text-center">{choice.description}</p>
+            <div className="flex flex-col justify-center items-center gap-[5px] w-full">
+              <h3 className="text-base">{choice.label}</h3>
+              <input
+                type="checkbox"
+                id={`checkbox-${choice.label}`}
+                name={`checkbox-${choice.label}`}
+                checked={lameSelected === choice.label}
+                onChange={() => handleLameChoice(choice)}
+                className="hidden"
+                required
+              />
+              <p className="text-xs font-extralight max-md:hidden text-center">
+                {choice.description}
+              </p>
             </div>
           </label>
         ))}
@@ -132,7 +135,7 @@ const LameEtDimension: React.FC<LameEtDimensionProps> = ({
             src={hoveredChoice.image}
             alt={hoveredChoice.label}
             width={100}
-              style={{ width: "auto", height: "auto" }}
+            style={{ width: "auto", height: "auto" }}
           />
           <p>{hoveredChoice.description}</p>
         </div>
