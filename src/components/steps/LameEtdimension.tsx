@@ -24,7 +24,6 @@ const LameEtDimension: React.FC<LameEtDimensionProps> = ({
       lameSelected !== "" &&
       dimensions.Largeur >= 600 &&
       dimensions.Hauteur >= 600;
-    console.log(`Enabling button: ${isEnabled}`);
     enableNextButton(isEnabled);
   }, [lameSelected, dimensions, enableNextButton]);
 
@@ -57,7 +56,6 @@ const LameEtDimension: React.FC<LameEtDimensionProps> = ({
   };
 
   const handleDimensionChange = (dimensionName: string, value: string) => {
-    // Remove leading zeros
     const newValue = value.replace(/^0+/, "");
     if (!/^\d*$/.test(newValue)) return; // Prevent non-numeric input
     dispatch(
@@ -96,12 +94,14 @@ const LameEtDimension: React.FC<LameEtDimensionProps> = ({
             onMouseLeave={() => setHoveredChoice(null)}
           >
             <Image
-              loading="eager"
+              loading={choice.label !== lameSelected ? "lazy" : undefined}
               src={choice.image}
               alt={choice.label}
               className="max-md:hidden"
               width={70}
+              height={70}
               style={{ width: "auto", height: "auto" }}
+              priority={choice.label === lameSelected}
             />
             <div className="flex flex-col justify-center items-center gap-[5px] w-full">
               <h3 className="text-base">{choice.label}</h3>
@@ -135,7 +135,9 @@ const LameEtDimension: React.FC<LameEtDimensionProps> = ({
             src={hoveredChoice.image}
             alt={hoveredChoice.label}
             width={100}
+            height={100}
             style={{ width: "auto", height: "auto" }}
+            loading="eager"
           />
           <p>{hoveredChoice.description}</p>
         </div>

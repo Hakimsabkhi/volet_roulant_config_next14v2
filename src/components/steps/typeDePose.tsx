@@ -1,4 +1,4 @@
-import React, { useState, useEffect, MouseEvent } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setPoseInstalled, selectPoseInstalled } from "../../store/voletSlice";
 import { poseOptions } from "../../assets/Data";
@@ -15,7 +15,6 @@ function TypeDePose({ enableNextButton }: TypeDePoseProps) {
   }>({ top: 0, left: 0 });
 
   useEffect(() => {
-    console.log("useEffect Triggered: ", { poseInstalled });
     enableNextButton(poseInstalled !== "");
   }, [poseInstalled, enableNextButton]);
 
@@ -47,16 +46,20 @@ function TypeDePose({ enableNextButton }: TypeDePoseProps) {
             onMouseLeave={() => setHoveredChoice(null)}
           >
             <Image
-              loading="eager"
               src={choice.image}
               alt={choice.label}
               width={100}
               height={100}
               className="w-12 h-auto md:w-16 lg:w-20 xl:w-24 rounded-[5px]"
               style={{ objectFit: "contain" }}
+              quality={75}
+              // For the selected image, use priority to load it quickly
+              priority={choice.label === poseInstalled}
+              // Otherwise, use lazy loading for non-selected images
+              loading={choice.label !== poseInstalled ? "lazy" : undefined}
             />
 
-            <div className="flex flex-col justify-center items-center text-center gap-[5px] ">
+            <div className="flex flex-col justify-center items-center text-center gap-[5px]">
               <div>
                 <h3 className="text-base max-md:text-sm">{choice.label}</h3>
                 <input
@@ -69,7 +72,7 @@ function TypeDePose({ enableNextButton }: TypeDePoseProps) {
                 />
                 <label htmlFor={`checkbox-${choice.label}`}></label>
               </div>
-              <p className=" text-xs font-extralight max-md:hidden text-center">
+              <p className="text-xs font-extralight max-md:hidden text-center">
                 {choice.description}
               </p>
             </div>
@@ -90,9 +93,13 @@ function TypeDePose({ enableNextButton }: TypeDePoseProps) {
           <Image
             src={hoveredChoice.image}
             alt={hoveredChoice.label}
-            className="max-md:hidden"
             width={100}
-            style={{ width: "auto", height: "auto" }}
+            height={100}
+            className="max-md:hidden"
+            quality={75}
+            // Load the hovered image eagerly for a better UX
+            loading="eager"
+            style={{ objectFit: "contain" }}
           />
           <p className="text-xs">{hoveredChoice.description}</p>
         </div>

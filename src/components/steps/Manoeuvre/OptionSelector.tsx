@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react";
 import { Option, OptionSelectorProps } from "../../../interfaces";
 import Image from "next/image";
 
-
 const OptionSelector: React.FC<OptionSelectorProps> = ({
   options,
   selectedOption,
@@ -30,30 +29,33 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
 
   return (
     <div className="flex flex-col">
-      <div ref={containerRef} className="w-full flex max-md:flex-col justify-center gap-[5px]">
+      <div
+        ref={containerRef}
+        className="w-full flex max-md:flex-col justify-center gap-[5px]"
+      >
         {options.map((option, index) => (
           <label
             key={index}
             onClick={() => handleChange(option)}
             className={`${
-              option.label === selectedOption ? "bg-[#ffffff] text-[#000] border-[2px] border-[rgb(255,255,255)] rounded-[5px] w-full" : "bg-[rgba(5,30,80,1)] border-[2px] border-[#fff] rounded-[5px] w-full hover:bg-[#ffffff] hover:text-[#000]"
+              option.label === selectedOption
+                ? "bg-[#ffffff] text-[#000] border-[2px] border-[rgb(255,255,255)] rounded-[5px] w-full"
+                : "bg-[rgba(5,30,80,1)] border-[2px] border-[#fff] rounded-[5px] w-full hover:bg-[#ffffff] hover:text-[#000]"
             }`}
             onMouseEnter={(e) => handleMouseEnter(e, option)}
             onMouseLeave={() => setHoveredChoice(null)}
           >
-            
-              <div className="flex justify-center p-1">
-                <h3 className="choice-label">{option.label}</h3>
-                <input
-                  type="checkbox"
-                  id={`checkbox-${option.label}-${type}`}
-                  name={`checkbox-${option.label}-${type}`}
-                  checked={option.label === selectedOption}
-                  onChange={() => {}}
-                  className="hidden"
-                />
-              </div>
-        
+            <div className="flex justify-center p-1">
+              <h3 className="choice-label">{option.label}</h3>
+              <input
+                type="checkbox"
+                id={`checkbox-${option.label}-${type}`}
+                name={`checkbox-${option.label}-${type}`}
+                checked={option.label === selectedOption}
+                onChange={() => {}}
+                className="hidden"
+              />
+            </div>
           </label>
         ))}
       </div>
@@ -71,6 +73,10 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
               className="popup-image"
               src={hoveredChoice.image}
               alt={hoveredChoice.label}
+              width={100}
+              height={100}
+              style={{ width: "auto", height: "auto" }}
+              loading="eager" // Load the hovered image eagerly for a better UX
             />
           )}
           <p>{hoveredChoice.description}</p>
