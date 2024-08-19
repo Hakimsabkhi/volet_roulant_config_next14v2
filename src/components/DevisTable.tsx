@@ -1,15 +1,12 @@
-"use client";
-
-import React from "react";
+import React, { useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toast, Id } from "react-toastify";
 import { setVoletFromDevis } from "@/store/voletSlice";
-import { format } from "date-fns"; // Import date-fns for date formatting
+import { addToCart } from "@/store/cartSlice";
+import { RootState } from "@/store";
+import { format } from "date-fns";
 import { Devis } from "@/interfaces";
-// src/interfaces/types.ts
-
-
-
 
 
 interface DevisTableProps {
@@ -23,6 +20,10 @@ const DevisTable: React.FC<DevisTableProps> = ({
 }) => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+
+  // Initialize useRef with undefined
+  const toastId = useRef<Id | undefined>(undefined);
 
   const handleModify = (id: string) => {
     const selectedDevis = devis.find((devisItem) => devisItem._id === id);
@@ -43,13 +44,37 @@ const DevisTable: React.FC<DevisTableProps> = ({
           optionTelecomandeSelected: selectedDevis.optionTelecomandeSelected || "",
           optionInterrupteurSelected: selectedDevis.optionInterrupteurSelected || "",
           sortieDeCableSelected: selectedDevis.sortieDeCableSelected || "",
-          multiplier: selectedDevis.multiplier, // Include multiplier
+          multiplier: selectedDevis.multiplier,
         })
       );
       router.push(`/configurateur?id=${id}`);
     }
   };
-  
+
+  const handleAddToCart = (devisItem: Devis) => {
+    const isAlreadyInCart = cartItems.some((item) => item.devisNumber === devisItem.DevisNumber);
+
+    if (isAlreadyInCart) {
+      // Check if there's already an active toast with the same message
+      if (toastId.current === undefined || !toast.isActive(toastId.current)) {
+        toastId.current = toast.error(`Devis Numéro: ${devisItem.DevisNumber} est déjà ajouté au panier.`);
+      }
+    } else {
+      const totalHT = devisItem.totalPrice * devisItem.multiplier;
+      const totalTTC = totalHT * 1.2;
+
+      dispatch(
+        addToCart({
+          id: devisItem._id,
+          devisNumber: devisItem.DevisNumber,
+          totalHT,
+          totalTTC,
+          quantity: devisItem.multiplier,
+        })
+      );
+      toast.success(`Devis Numéro: ${devisItem.DevisNumber} a été ajouté au panier.`);
+    }
+  };
 
   if (devis.length === 0) {
     return <div>No devis available</div>;
@@ -170,33 +195,33 @@ const DevisTable: React.FC<DevisTableProps> = ({
             </tbody>
           </table>
           <table className="w-[45%]">
-  <thead>
-    <tr>
-    <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">
-        Nombres d&apos;unités
-      </th>
-      <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">
-        Total HT
-      </th>
-      <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">
-        Total TTC
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-    <td className="py-2 px-4 border-b text-sm font-bold border-black">
-        {devisItem.multiplier}
-      </td>
-      <td className="py-2 px-4 border-b text-sm font-bold border-black">
-        {`${devisItem.totalPrice.toFixed(2)} * ${devisItem.multiplier} = ${(devisItem.totalPrice * devisItem.multiplier).toFixed(2)}€`}
-      </td>
-      <td className="py-2 px-4 border-b text-sm font-bold border-black">
-        {(devisItem.totalPrice * devisItem.multiplier * 1.2).toFixed(2)}€
-      </td>
-    </tr>
-  </tbody>
-</table>
+            <thead>
+              <tr>
+                <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">
+                  Nombres d&apos;unités
+                </th>
+                <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">
+                  Total HT
+                </th>
+                <th className="py-2 px-4 border-b bg-secondary text-sm font-bold">
+                  Total TTC
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="py-2 px-4 border-b text-sm font-bold border-black">
+                  {devisItem.multiplier}
+                </td>
+                <td className="py-2 px-4 border-b text-sm font-bold border-black">
+                  {`${devisItem.totalPrice.toFixed(2)} * ${devisItem.multiplier} = ${(devisItem.totalPrice * devisItem.multiplier).toFixed(2)}€`}
+                </td>
+                <td className="py-2 px-4 border-b text-sm font-bold border-black">
+                  {(devisItem.totalPrice * devisItem.multiplier * 1.2).toFixed(2)}€
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
           <table className="w-full">
             <tbody>
@@ -219,8 +244,11 @@ const DevisTable: React.FC<DevisTableProps> = ({
                   </button>
                 </td>
                 <td className="w-[20%] py-2 px-4 border-b text-sm font-bold flex gap-5">
-                  <button className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2">
-                    Approuvés mon devis
+                  <button
+                    className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2"
+                    onClick={() => handleAddToCart(devisItem)}
+                  >
+                    Add to cart
                   </button>
                 </td>
               </tr>

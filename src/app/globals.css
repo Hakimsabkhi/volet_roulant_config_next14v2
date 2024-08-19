@@ -11,7 +11,7 @@
 }
 
 :root {
-  --color-primary: rgba(3, 136, 123, 0.897);
+  --color-primary: rgba(3, 136, 123, 1);
   --color-secondary: rgba(5, 30, 80, 1);
   --color-cwhite: rgb(255, 255, 255);
   --color-cblack: rgb(0, 0, 0);
@@ -63,6 +63,7 @@ body {
 
 .nav-btn {
   width: 100%;
+  height: fit-content;
   padding-top: 8px;
   padding-bottom: 8px;
   font-size: 14px;

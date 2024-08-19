@@ -1,11 +1,12 @@
-// src/store/index.ts
-
+// store/index.ts */
 import { configureStore } from '@reduxjs/toolkit';
 import voletReducer from './voletSlice';
+import cartReducer from './cartSlice'; 
 
 const store = configureStore({
   reducer: {
     volet: voletReducer,
+    cart: cartReducer, 
   },
 });
 

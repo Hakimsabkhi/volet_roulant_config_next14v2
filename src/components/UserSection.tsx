@@ -1,13 +1,12 @@
-"use client";
 import React from 'react';
 import { useSession } from 'next-auth/react';
-import UserDropdown from './UserDropdown';
+import Dropdown from './Dropdown';
 
 const UserSection: React.FC = () => {
   const { data: session } = useSession();
 
-  return (
-    <UserDropdown
+  return (    
+    <Dropdown
       userName={session?.user?.name || 'Guest User'}
       userEmail={session?.user?.email || 'guest@example.com'}
     />

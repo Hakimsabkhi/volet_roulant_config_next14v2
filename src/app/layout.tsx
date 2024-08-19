@@ -3,7 +3,9 @@ import { Poppins } from 'next/font/google';
 import './globals.css';
 import SessionProviderWrapper from '../components/SessionProviderWrapper';
 import Providers from '../components/Providers';
-import ClientLayout from '@/components/ClientLayout'; // Import the client component
+import ClientLayout from '@/components/ClientLayout'; 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
 
@@ -22,7 +24,22 @@ export default function RootLayout({
       <body className={poppins.className}>
         <SessionProviderWrapper>
           <Providers>
-            <ClientLayout>{children}</ClientLayout>
+            <ClientLayout>
+              {/* ToastContainer should be placed at the root level */}
+              <ToastContainer 
+                position="top-center"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+              />
+              {children}
+            </ClientLayout>
           </Providers>
         </SessionProviderWrapper>
       </body>
