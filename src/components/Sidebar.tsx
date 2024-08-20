@@ -25,7 +25,7 @@ const Sidebar: React.FC = () => {
             </a>
           </li>
           <li>
-            <a href="#" className="block pl-6 p-2 hover:bg-white hover:text-black">
+            <a href="/adresse" className="block pl-6 p-2 hover:bg-white hover:text-black">
               Adresse
             </a>
           </li>

@@ -3,11 +3,10 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, Id } from "react-toastify";
 import { setVoletFromDevis } from "@/store/voletSlice";
-import { addToCart } from "@/store/cartSlice";
+import { addToCart, removeFromCart, updateCartItem } from "@/store/cartSlice";
 import { RootState } from "@/store";
 import { format } from "date-fns";
 import { Devis } from "@/interfaces";
-
 
 interface DevisTableProps {
   devis: Devis[];
@@ -47,10 +46,28 @@ const DevisTable: React.FC<DevisTableProps> = ({
           multiplier: selectedDevis.multiplier,
         })
       );
+      
+      // Update the cart if the modified devis is already in it
+      const cartItem = cartItems.find(item => item.devisNumber === selectedDevis.DevisNumber);
+      if (cartItem) {
+        const updatedTotalHT = selectedDevis.totalPrice * selectedDevis.multiplier;
+        const updatedTotalTTC = updatedTotalHT * 1.2;
+  
+        dispatch(
+          updateCartItem({
+            id: selectedDevis._id,
+            devisNumber: selectedDevis.DevisNumber,
+            totalHT: updatedTotalHT,
+            totalTTC: updatedTotalTTC,
+            quantity: selectedDevis.multiplier,
+          })
+        );
+      }
+  
       router.push(`/configurateur?id=${id}`);
     }
   };
-
+  
   const handleAddToCart = (devisItem: Devis) => {
     const isAlreadyInCart = cartItems.some((item) => item.devisNumber === devisItem.DevisNumber);
 
@@ -74,6 +91,17 @@ const DevisTable: React.FC<DevisTableProps> = ({
       );
       toast.success(`Devis Numéro: ${devisItem.DevisNumber} a été ajouté au panier.`);
     }
+  };
+
+  const handleDeleteWithSync = (id: string) => {
+    // Remove the item from the cart if it's in it
+    const cartItem = cartItems.find(item => item.id === id);
+    if (cartItem) {
+      dispatch(removeFromCart(id));
+    }
+
+    // Proceed with the original deletion logic
+    handleDelete(id);
   };
 
   if (devis.length === 0) {
@@ -227,9 +255,6 @@ const DevisTable: React.FC<DevisTableProps> = ({
             <tbody>
               <tr className="flex justify-between">
                 <td className="w-[45%] py-2 px-4 border-b text-sm font-bold flex gap-5">
-                  <button className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2">
-                    Ajouter un Adresse
-                  </button>
                   <button
                     className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2"
                     onClick={() => handleModify(devisItem._id)}
@@ -238,9 +263,9 @@ const DevisTable: React.FC<DevisTableProps> = ({
                   </button>
                   <button
                     className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2"
-                    onClick={() => handleDelete(devisItem._id)}
+                    onClick={() => handleDeleteWithSync(devisItem._id)}
                   >
-                    Delete
+                    Supprimer
                   </button>
                 </td>
                 <td className="w-[20%] py-2 px-4 border-b text-sm font-bold flex gap-5">
@@ -248,7 +273,7 @@ const DevisTable: React.FC<DevisTableProps> = ({
                     className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2"
                     onClick={() => handleAddToCart(devisItem)}
                   >
-                    Add to cart
+                    Ajouter au panier
                   </button>
                 </td>
               </tr>

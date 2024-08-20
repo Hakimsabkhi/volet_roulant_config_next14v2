@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { selectMultiplier } from "../store/voletSlice"; // Import the multiplier selector
-import { useRouter, useSearchParams } from "next/navigation"; // Import useRouter and useSearchParams
+import { useSelector, useDispatch } from "react-redux"; // Added useDispatch
+import { selectMultiplier } from "../store/voletSlice";
+import { useRouter, useSearchParams } from "next/navigation";
 import DimensionCostCalculator from "./calculator/dimensionCostCalculator";
 import {
   optionsMotorisations,
@@ -14,6 +14,7 @@ import {
   lameChoices,
 } from "../assets/Data";
 import { RootState } from "../store";
+import { updateCartItem } from "../store/cartSlice"; // Import the updateCartItem action
 
 const getPrice = (options: any[], selectedOption: string) => {
   const option = options.find((option) => option.label === selectedOption);
@@ -23,9 +24,13 @@ const getPrice = (options: any[], selectedOption: string) => {
 const MultiStepInfoDisplay: React.FC = () => {
   const [dimensionCost, setDimensionCost] = useState(0);
   const [devisId, setDevisId] = useState<string | null>(null);
-  const router = useRouter(); // Initialize useRouter
-  const searchParams = useSearchParams(); // Use useSearchParams to get query parameters
-  const multiplier = useSelector(selectMultiplier); // Access the multiplier from Redux
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const multiplier = useSelector(selectMultiplier);
+
+  // Fetch cart items from the Redux store
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const dispatch = useDispatch();
 
   const selectedCoulisseColor = useSelector(
     (state: RootState) => state.volet.selectedColor.coulisse
@@ -92,7 +97,7 @@ const MultiStepInfoDisplay: React.FC = () => {
     interrupteurPrice +
     sortieDeCablePrice +
     commandeManualSelectedPrice +
-    dimensionCost ;
+    dimensionCost;
 
   useEffect(() => {
     const id = searchParams.get("id");
@@ -101,6 +106,86 @@ const MultiStepInfoDisplay: React.FC = () => {
       console.log("Devis ID:", id);
     }
   }, [searchParams]);
+
+  const handleSaveChanges = async () => {
+    if (!devisId) {
+      alert("Devis ID is missing. Unable to update.");
+      return;
+    }
+
+    const data = {
+      id: devisId,
+      selectedCoulisseColor,
+      selectedTablierColor,
+      selectedLameFinaleColor,
+      lameSelected,
+      dimensions,
+      poseInstalled,
+      manoeuvreSelected,
+      commandeManualSelected,
+      optionMotorisationSelected,
+      optionTelecomandeSelected,
+      optionInterrupteurSelected,
+      sortieDeCableSelected,
+      dimensionCost,
+      totalPrice,
+      multiplier,
+    };
+
+    console.log("Submitting data:", data);
+
+    if (
+      !selectedCoulisseColor ||
+      !selectedTablierColor ||
+      !selectedLameFinaleColor ||
+      !lameSelected ||
+      !dimensions ||
+      !poseInstalled ||
+      !manoeuvreSelected ||
+      !dimensionCost ||
+      !totalPrice
+    ) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/updateDevis", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error updating data");
+      }
+
+      // Update the cart item if it exists
+      const cartItem = cartItems.find(item => item.id === devisId);
+      if (cartItem) {
+        const updatedTotalHT = totalPrice * multiplier;
+        const updatedTotalTTC = updatedTotalHT * 1.2;
+
+        dispatch(
+          updateCartItem({
+            id: devisId,
+            devisNumber: cartItem.devisNumber,
+            totalHT: updatedTotalHT,
+            totalTTC: updatedTotalTTC,
+            quantity: multiplier,
+          })
+        );
+      }
+
+      alert("Changes saved successfully!");
+      router.push("/deviscrees"); // Redirect to the created devis page after saving changes
+    } catch (error) {
+      console.error(error);
+      alert("Failed to save changes");
+    }
+  };
 
   const handleSubmit = async () => {
     // Data for creating a new devis
@@ -161,67 +246,6 @@ const MultiStepInfoDisplay: React.FC = () => {
     }
   };  
 
-  const handleSaveChanges = async () => {
-    if (!devisId) {
-      alert("Devis ID is missing. Unable to update.");
-      return;
-    }
-
-    const data = {
-      id: devisId,
-      selectedCoulisseColor,
-      selectedTablierColor,
-      selectedLameFinaleColor,
-      lameSelected,
-      dimensions,
-      poseInstalled,
-      manoeuvreSelected,
-      commandeManualSelected,
-      optionMotorisationSelected,
-      optionTelecomandeSelected,
-      optionInterrupteurSelected,
-      sortieDeCableSelected,
-      dimensionCost,
-      totalPrice,
-    };
-
-    console.log("Submitting data:", data);
-
-    if (
-      !selectedCoulisseColor ||
-      !selectedTablierColor ||
-      !selectedLameFinaleColor ||
-      !lameSelected ||
-      !dimensions ||
-      !poseInstalled ||
-      !manoeuvreSelected ||
-      !dimensionCost ||
-      !totalPrice
-    ) {
-      alert("Please fill in all required fields");
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/updateDevis", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error("Error updating data");
-      }
-
-      alert("Changes saved successfully!");
-      router.push("/deviscrees"); // Redirect to home page after saving changes
-    } catch (error) {
-      console.error(error);
-      alert("Failed to save changes");
-    }
-  };
 
   return (
     <div className="flex flex-col text-left gap-[10px] font-normal">

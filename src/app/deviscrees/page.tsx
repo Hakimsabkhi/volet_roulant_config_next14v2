@@ -5,9 +5,8 @@ import { useSession } from "next-auth/react";
 import DevisTable from "@/components/DevisTable";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import FilterBar from "@/components/FilterBar";
-import Pagination from "@/components/Pagination"; 
-import { Devis } from "../../interfaces";// Import Pagination
-
+import Pagination from "@/components/Pagination";
+import { Devis } from "../../interfaces"; // Import Pagination
 
 const ITEMS_PER_PAGE = 3;
 

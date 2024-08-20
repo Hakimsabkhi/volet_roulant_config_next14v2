@@ -18,7 +18,10 @@ const CardDropdown: React.FC = () => {
   };
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
       setDropdownOpen(false);
     }
   };
@@ -58,7 +61,14 @@ const CardDropdown: React.FC = () => {
         className="w-[50px] h-[50px] bg-none border-none cursor-pointer flex items-center justify-center bg-cbutton shadow-[0_2px_6px_rgba(0,0,0,0.952)] rounded-[4px] transition-shadow duration-300 ease z-[1000] hover:bg-cwhite focus:bg-cwhite relative"
         type="button"
       >
-        <Image src={PanierIcon} loading="eager" alt="Cart Icon" className="button-icon" width={40} height={40} />
+        <Image
+          src={PanierIcon}
+          loading="eager"
+          alt="Cart Icon"
+          className="button-icon"
+          width={40}
+          height={40}
+        />
         {cartItems.length > 0 && (
           <span className="absolute top-1 left-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
             {cartItems.length}
@@ -111,7 +121,7 @@ const CardDropdown: React.FC = () => {
                 <p className="font-bold">Total TTC: {totalTTC.toFixed(2)}€</p>
               </div>
               <button className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2 mt-2 w-full">
-                Valider mes devis et payees
+                Valider mes devis et payer
               </button>
             </>
           )}
