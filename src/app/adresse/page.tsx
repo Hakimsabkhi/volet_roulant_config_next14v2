@@ -97,7 +97,7 @@ export default function AdressePage() {
   return (
     <div className="w-full items-center p-4 flex flex-col gap-4 justify-center">
       <div className="flex flex-col w-[30%] justify-center">
-        <h1 className="text-4xl font-bold mb-4 text-center">
+        <h1 className="text-4xl max-2xl:text-2xl font-bold mb-4 text-center">
           Gérer les adresses
         </h1>
         <button

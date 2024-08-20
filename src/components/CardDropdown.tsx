@@ -84,7 +84,7 @@ const CardDropdown: React.FC = () => {
         >
           {cartItems.length === 0 ? (
             <div className="px-4 py-2 text-center text-sm text-white">
-              Cart is empty
+            Le panier est vide
             </div>
           ) : (
             <>
