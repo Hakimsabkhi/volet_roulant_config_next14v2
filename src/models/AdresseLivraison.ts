@@ -2,6 +2,9 @@ import mongoose, { Schema, Document, model } from 'mongoose';
 
 interface IAdresseLivraison extends Document {
   client: mongoose.Types.ObjectId;
+  name: string;
+  surname: string;
+  phoneNumber: string;
   street: string;
   postalCode: string;
   city: string;
@@ -12,6 +15,9 @@ interface IAdresseLivraison extends Document {
 
 const AdresseLivraisonSchema: Schema = new Schema({
   client: { type: mongoose.Schema.Types.ObjectId, ref: 'Client', required: true },
+  name: { type: String, required: true },
+  surname: { type: String, required: true },
+  phoneNumber: { type: String, required: true },
   street: { type: String, required: true },
   postalCode: { type: String, required: true },
   city: { type: String, required: true },

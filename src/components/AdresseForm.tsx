@@ -2,6 +2,9 @@ import { useState } from 'react';
 
 interface Address {
   _id: string;
+  name: string;
+  surname: string;
+  phoneNumber: string;
   street: string;
   postalCode: string;
   city: string;
@@ -16,6 +19,9 @@ interface AdresseFormProps {
 }
 
 const AdresseForm: React.FC<AdresseFormProps> = ({ existingData, onClose, onSave }) => {
+  const [name, setName] = useState(existingData?.name || '');
+  const [surname, setSurname] = useState(existingData?.surname || '');
+  const [phoneNumber, setPhoneNumber] = useState(existingData?.phoneNumber || '');
   const [street, setStreet] = useState(existingData?.street || '');
   const [postalCode, setPostalCode] = useState(existingData?.postalCode || '');
   const [city, setCity] = useState(existingData?.city || '');
@@ -26,6 +32,9 @@ const AdresseForm: React.FC<AdresseFormProps> = ({ existingData, onClose, onSave
     event.preventDefault();
 
     const addressData: Omit<Address, '_id'> & { _id?: string } = {
+      name,
+      surname,
+      phoneNumber,
       street,
       postalCode,
       city,
@@ -51,9 +60,39 @@ const AdresseForm: React.FC<AdresseFormProps> = ({ existingData, onClose, onSave
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="w-[500px] space-y-4">
       <div>
-        <label className="block font-medium">Street:</label>
+        <label className="block font-medium">Prénom:</label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          className="w-full px-3 py-2 border rounded"
+        />
+      </div>
+      <div>
+        <label className="block font-medium">Nom:</label>
+        <input
+          type="text"
+          value={surname}
+          onChange={(e) => setSurname(e.target.value)}
+          required
+          className="w-full px-3 py-2 border rounded"
+        />
+      </div>
+      <div>
+        <label className="block font-medium">Numéro de téléphone:</label>
+        <input
+          type="text"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          required
+          className="w-full px-3 py-2 border rounded"
+        />
+      </div>
+      <div>
+        <label className="block font-medium">Rue:</label>
         <input
           type="text"
           value={street}
@@ -63,7 +102,7 @@ const AdresseForm: React.FC<AdresseFormProps> = ({ existingData, onClose, onSave
         />
       </div>
       <div>
-        <label className="block font-medium">Postal Code:</label>
+        <label className="block font-medium">Code postal:</label>
         <input
           type="text"
           value={postalCode}
@@ -73,7 +112,7 @@ const AdresseForm: React.FC<AdresseFormProps> = ({ existingData, onClose, onSave
         />
       </div>
       <div>
-        <label className="block font-medium">City:</label>
+        <label className="block font-medium">Ville:</label>
         <input
           type="text"
           value={city}
@@ -83,7 +122,7 @@ const AdresseForm: React.FC<AdresseFormProps> = ({ existingData, onClose, onSave
         />
       </div>
       <div>
-        <label className="block font-medium">Country:</label>
+        <label className="block font-medium">Pays:</label>
         <input
           type="text"
           value={country}
@@ -93,7 +132,7 @@ const AdresseForm: React.FC<AdresseFormProps> = ({ existingData, onClose, onSave
         />
       </div>
       <div>
-        <label className="block font-medium">Additional Info:</label>
+        <label className="block font-medium">Informations supplémentaires:</label>
         <input
           type="text"
           value={additionalInfo}
@@ -101,19 +140,19 @@ const AdresseForm: React.FC<AdresseFormProps> = ({ existingData, onClose, onSave
           className="w-full px-3 py-2 border rounded"
         />
       </div>
-      <div className="flex justify-end space-x-4">
+      <div className="flex justify-between">
         <button
           type="submit"
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
+          className="nav-btn hover:bg-NavbuttonH uppercase font-bold"
         >
-          {existingData ? 'Update Address' : 'Add Address'}
+          {existingData ? 'Mettre à jour l’adresse' : 'Ajouter l’adresse'}
         </button>
         <button
           type="button"
           onClick={onClose}
-          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
+          className="nav-btn hover:bg-NavbuttonH uppercase font-bold"
         >
-          Cancel
+          Annuler
         </button>
       </div>
     </form>
