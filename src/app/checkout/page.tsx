@@ -2,9 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 import RecapProducts from "@/components/checkoutPage/RecapProducts";
 import AddressSelection from "@/components/checkoutPage/AddressSelection";
 import PaymentMethodSelection from "@/components/checkoutPage/PaymentMethodSelection";
+import { clearCart } from "@/store/cartSlice"; // Import your clear action
 
 interface Address {
   _id: string;
@@ -21,6 +23,7 @@ const CheckoutPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const dispatch = useDispatch(); // Initialize dispatch
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -56,6 +59,9 @@ const CheckoutPage: React.FC = () => {
       // Handle the submission logic, e.g., send the data to the backend
       console.log("Selected Address:", selectedAddress);
       console.log("Selected Payment Method:", paymentMethod);
+
+      // Clear the cart
+      dispatch(clearCart());
 
       // Redirect to a confirmation or success page
       router.push("/confirmation");

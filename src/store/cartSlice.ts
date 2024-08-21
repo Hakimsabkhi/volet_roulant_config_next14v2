@@ -1,4 +1,3 @@
-/* store/cartSlice.ts */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface CartItem {
@@ -33,8 +32,11 @@ const cartSlice = createSlice({
         state.items[index] = action.payload;
       }
     },
+    clearCart: (state) => {
+      state.items = [];
+    },
   },
 });
 
-export const { addToCart, removeFromCart, updateCartItem } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateCartItem, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;
