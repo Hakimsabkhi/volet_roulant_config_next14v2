@@ -10,11 +10,10 @@ interface IAdresseLivraison extends Document {
   city: string;
   country: string;
   additionalInfo?: string;
-  createdAt: Date;
 }
 
 const AdresseLivraisonSchema: Schema = new Schema({
-  client: { type: mongoose.Schema.Types.ObjectId, ref: 'Client', required: true },
+  client: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   name: { type: String, required: true },
   surname: { type: String, required: true },
   phoneNumber: { type: String, required: true },
@@ -22,8 +21,7 @@ const AdresseLivraisonSchema: Schema = new Schema({
   postalCode: { type: String, required: true },
   city: { type: String, required: true },
   country: { type: String, required: true },
-  additionalInfo: { type: String }, // Optional additional information like "Building A, Floor 3"
-  createdAt: { type: Date, default: Date.now, required: true },
+  additionalInfo: { type: String },
 });
 
 // Index to ensure each client can have only one unique address (if required)

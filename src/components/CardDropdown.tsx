@@ -1,4 +1,4 @@
-"use client"; // This directive ensures the component is a client component
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -6,12 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/index";
 import { removeFromCart } from "@/store/cartSlice";
 import { devisIcon, PanierIcon } from "@/assets/imageModule";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 const CardDropdown: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
+  const router = useRouter(); // Initialize useRouter
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -53,6 +55,11 @@ const CardDropdown: React.FC = () => {
   const totalHT = cartItems.reduce((sum, item) => sum + item.totalHT, 0);
   const totalTTC = cartItems.reduce((sum, item) => sum + item.totalTTC, 0);
 
+  const handleCheckout = () => {
+    // Assuming you pass the necessary data through the router
+    router.push("/checkout"); // Replace "/checkout" with your actual checkout page route
+  };
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button
@@ -84,7 +91,7 @@ const CardDropdown: React.FC = () => {
         >
           {cartItems.length === 0 ? (
             <div className="px-4 py-2 text-center text-sm text-white">
-            Le panier est vide
+              Le panier est vide
             </div>
           ) : (
             <>
@@ -120,7 +127,10 @@ const CardDropdown: React.FC = () => {
                 <p className="font-bold">Total HT: {totalHT.toFixed(2)}€</p>
                 <p className="font-bold">Total TTC: {totalTTC.toFixed(2)}€</p>
               </div>
-              <button className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2 mt-2 w-full">
+              <button
+                onClick={handleCheckout} // Handle the checkout process
+                className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2 mt-2 w-full"
+              >
                 Valider mes devis et payer
               </button>
             </>
