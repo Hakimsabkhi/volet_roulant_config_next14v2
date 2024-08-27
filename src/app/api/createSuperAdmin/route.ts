@@ -3,10 +3,14 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import User from '@/models/User'; // Adjust the path as necessary
 
-const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/your-database-name';
+const mongoUri = process.env.MONGODB_URI;
 
 export async function POST(req: NextRequest) {
   try {
+    if (!mongoUri) {
+      throw new Error('MONGODB_URI is not defined');
+    }
+
     if (mongoose.connection.readyState !== 1) {
       await mongoose.connect(mongoUri);
     }
