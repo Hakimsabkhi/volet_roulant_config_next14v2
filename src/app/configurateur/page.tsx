@@ -60,15 +60,8 @@ const ConfigurateurContent: React.FC = () => {
     router.push("/auth/signin"); // Redirect to sign-in if not authenticated
     return;
   }
-
   return (
     <div className="w-full h-full text-[#fff]">
-      <div className="absolute top-4 right-16 z-[1000] flex gap-4">
-        <UserDropdown 
-          userName={session.user?.name || "User"} 
-          userEmail={session.user?.email || "user.email@example.com"} 
-        />
-      </div>
       <Viewer setPosition={setPosition} setTarget={setTarget} />
     </div>
   );
