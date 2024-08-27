@@ -1,3 +1,5 @@
+/* src/app/api/auth/[...nextauth] */
+
 import NextAuth from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
 

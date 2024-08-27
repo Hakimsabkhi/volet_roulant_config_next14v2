@@ -10,7 +10,7 @@ import UserSection from '@/components/UserSection';
 const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
   
-  const excludedPaths = ['/configurateur', '/auth/signin', '/checkout'];
+  const excludedPaths = ['/configurateur', '/auth/signin', '/auth/signup','/checkout'];
 
   if (excludedPaths.includes(pathname)) {
     return <>{children}</>;

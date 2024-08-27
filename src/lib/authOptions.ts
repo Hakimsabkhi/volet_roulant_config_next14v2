@@ -1,3 +1,5 @@
+/* lib/authOption.ts */
+
 import { NextAuthOptions, Session, User, DefaultSession } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
