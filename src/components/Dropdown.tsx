@@ -1,4 +1,4 @@
-"use client"; // This directive ensures the component is a client component
+'use client'; // This directive ensures the component is a client component
 
 import React, { useState, useEffect, useRef } from "react";
 import { signOut } from "next-auth/react";
@@ -8,9 +8,10 @@ import { userIcon } from '../assets/imageModule';
 interface UserDropdownProps {
   userName: string;
   userEmail: string;
+  userRole: string; // Add the user role to the props
 }
 
-const Dropdown: React.FC<UserDropdownProps> = ({ userName, userEmail }) => {
+const Dropdown: React.FC<UserDropdownProps> = ({ userName, userEmail, userRole }) => {
   
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -59,11 +60,12 @@ const Dropdown: React.FC<UserDropdownProps> = ({ userName, userEmail }) => {
       {dropdownOpen && (
         <div
           id="dropdownAvatar"
-          className="absolute right-0 p-2 mt-2 bg-primary  rounded-md shadow-lg z-[1000] w-fit "
+          className="absolute right-0 p-2 mt-4 bg-primary rounded-md shadow-lg z-[1000] w-fit"
         >
           <div className="px-4 py-3 text-sm text-white border-b">
             <div>{userName}</div>
-            <div className="font-medium truncate">{userEmail}</div>
+            <div>{userEmail}</div>
+            <div>Role: {userRole}</div> {/* Display the user role here */}
           </div>
           <ul
             className="py-2 text-sm text-white"

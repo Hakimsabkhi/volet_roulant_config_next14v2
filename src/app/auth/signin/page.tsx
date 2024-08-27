@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useSession, signIn, getProviders, ClientSafeProvider } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const SignInPage: React.FC = () => {
   const [providers, setProviders] = useState<Record<string, ClientSafeProvider> | null>(null);
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -18,11 +20,11 @@ const SignInPage: React.FC = () => {
         if (res) {
           setProviders(res);
         } else {
-          setError('Failed to load authentication providers');
+          setError('Failed to load authentication providers.');
         }
       } catch (error) {
         console.error('Error fetching providers:', error);
-        setError('An unexpected error occurred. Please try again.');
+        setError('An unexpected error occurred while loading providers. Please try again.');
       }
     };
     fetchProviders();
@@ -47,15 +49,20 @@ const SignInPage: React.FC = () => {
         email: credentials.email,
         password: credentials.password,
       });
-
+  
       if (result?.ok) {
         router.push('/');
       } else {
         setError('Failed to sign in. Please check your email and password and try again.');
       }
     } catch (error) {
+      console.error('Sign in error:', error);
       setError('An unexpected error occurred. Please try again.');
     }
+  };
+  
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -75,31 +82,51 @@ const SignInPage: React.FC = () => {
             <input
               type="email"
               name="email"
-              placeholder="name@company.com"
+              id="email"
+              aria-label="Email"
+              placeholder=""
               value={credentials.email}
               onChange={handleChange}
               className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-gray-200 leading-tight focus:outline-none focus:shadow-outline"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              placeholder="•••••••••"
-              value={credentials.password}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-gray-200 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
-          </div>
+          <div className="mb-4 relative">
+  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+    Password
+  </label>
+  <div className="relative">
+    <input
+      type={showPassword ? 'text' : 'password'}
+      name="password"
+      id="password"
+      aria-label="Password"
+      placeholder=""
+      value={credentials.password}
+      onChange={handleChange}
+      className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-gray-200 leading-tight focus:outline-none focus:shadow-outline pr-10"
+      required
+    />
+    <div
+      className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+      onClick={togglePasswordVisibility}
+    >
+      {showPassword ? <FaEye className="text-gray-600" />:<FaEyeSlash className="text-gray-600" />}
+    </div>
+  </div>
+</div>
+
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center h-5">
-              <input id="remember" type="checkbox" className="w-5 h-5 rounded bg-gray-400" />
-              <label className="ml-2 font-bold text-gray-400">Remember me</label>
+              <input
+                id="remember"
+                type="checkbox"
+                className="w-5 h-5 rounded bg-gray-400"
+                aria-label="Remember me"
+              />
+              <label htmlFor="remember" className="ml-2 font-bold text-gray-400">
+                Remember me
+              </label>
             </div>
             <a href="#" className="text-blue-600 font-bold">Forgot password?</a>
           </div>
@@ -124,7 +151,7 @@ const SignInPage: React.FC = () => {
               onClick={() => router.push('/auth/signup')}
               className="text-blue-600 hover:text-blue-400 font-bold py-2 px-4 w-full focus:shadow-outline"
             >
-              Dont have an account ? Sign Up
+              Don&apos;t have an account? Sign Up
             </button>
           </div>
         </form>

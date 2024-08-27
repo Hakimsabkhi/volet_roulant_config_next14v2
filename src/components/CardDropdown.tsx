@@ -87,7 +87,7 @@ const CardDropdown: React.FC = () => {
       {dropdownOpen && (
         <div
           id="dropdownCart"
-          className="absolute right-0 p-2 mt-2 bg-primary rounded-md shadow-lg z-[1000] w-[550px]"
+          className="absolute right-0 p-2 mt-4 bg-primary rounded-md shadow-lg z-[1000] w-[550px]"
         >
           {cartItems.length === 0 ? (
             <div className="px-4 py-2 text-center text-sm text-white">
