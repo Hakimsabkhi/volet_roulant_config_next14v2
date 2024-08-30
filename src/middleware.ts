@@ -20,25 +20,6 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Handle valid auth paths and existing pages
-  const validAuthPaths = ['/auth/signin', '/auth/signup', '/auth/reset-password'];
-  const isAuthPath = pathname.startsWith('/auth');
-
-  if (!validAuthPaths.includes(pathname) && isAuthPath) {
-    return NextResponse.redirect(new URL('/', req.url)); // Redirect to homepage if path is invalid
-  }
-
-  // Redirect unauthenticated users to sign-in page
-  if (!token && !isAuthPath) {
-    const signInUrl = new URL('/auth/signin', req.url);
-    signInUrl.searchParams.set('callbackUrl', req.url); // Ensure return after sign-in
-    return NextResponse.redirect(signInUrl);
-  }
-
-  // Redirect authenticated users away from auth pages
-  if (token && isAuthPath && validAuthPaths.includes(pathname)) {
-    return NextResponse.redirect(new URL('/', req.url));
-  }
 
   // Role-based access control for the dashboard
   if (pathname.startsWith('/admin')) {
