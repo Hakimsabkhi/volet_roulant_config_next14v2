@@ -150,7 +150,7 @@ const MultiStepInfoDisplay: React.FC = () => {
     }
 
     try {
-      const response = await fetch("/api/devis/updateDevis", {
+      const response = await fetch(`${process.env.NEXTAUTH_URL}/api/devis/updateDevis`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -226,7 +226,7 @@ const MultiStepInfoDisplay: React.FC = () => {
     }
   
     try {
-      const response = await fetch("/api/devis/saveDevisData", {
+      const response = await fetch(`${process.env.NEXTAUTH_URL}/api/devis/saveDevisData`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

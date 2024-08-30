@@ -26,7 +26,7 @@ const SignUpPage: React.FC = () => {
     }
 
     try {
-      const res = await fetch('/api/auth/signup', {
+      const res = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

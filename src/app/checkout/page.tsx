@@ -28,7 +28,7 @@ const CheckoutPage: React.FC = () => {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const response = await fetch('/api/adresse/save', {
+        const response = await fetch(`${process.env.NEXTAUTH_URL}/api/adresse/save`, {
           method: 'GET',
         });
         if (!response.ok) {

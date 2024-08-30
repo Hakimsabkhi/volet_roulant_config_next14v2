@@ -21,7 +21,7 @@ const Users: React.FC = () => {
     const fetchUsers = async () => {
       try {
         setError(null);
-        const response = await fetch('/api/users/getallusers');
+        const response = await fetch(`${process.env.NEXTAUTH_URL}/api/users/getallusers`);
         if (!response.ok) {
           throw new Error('Failed to fetch users');
         }
@@ -44,7 +44,7 @@ const Users: React.FC = () => {
     console.log("Deleting user with ID:", id);
 
     try {
-      const response = await fetch("/api/users/deleteuserbyid", {
+      const response = await fetch(`${process.env.NEXTAUTH_URL}/api/users/deleteuserbyid`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -71,7 +71,7 @@ const Users: React.FC = () => {
     setSuccessMessage(null);
 
     try {
-      const response = await fetch('/api/users/changeUserRole', {
+      const response = await fetch(`${process.env.NEXTAUTH_URL}/api/users/changeUserRole`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

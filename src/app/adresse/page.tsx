@@ -26,7 +26,7 @@ export default function AdressePage() {
     // Fetch existing addresses when the component loads
     const fetchAddresses = async () => {
       try {
-        const response = await fetch("/api/adresse/save", {
+        const response = await fetch(`${process.env.NEXTAUTH_URL}/api/adresse/save`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -60,7 +60,7 @@ export default function AdressePage() {
 
   const handleDeleteClick = async (addressId: string) => {
     try {
-      const response = await fetch(`/api/adresse/delete/${addressId}`, {
+      const response = await fetch(`${process.env.NEXTAUTH_URL}/api/adresse/delete/${addressId}`, {
         method: "DELETE",
       });
 

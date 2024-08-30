@@ -43,7 +43,7 @@ const AdresseForm: React.FC<AdresseFormProps> = ({ existingData, onClose, onSave
       _id: existingData?._id,
     };
 
-    const response = await fetch('/api/adresse/save', {
+    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/adresse/save`, {
       method: existingData ? 'PUT' : 'POST',
       headers: {
         'Content-Type': 'application/json',
