@@ -1,6 +1,7 @@
+// src/app/api/devis/deleteDevis/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import connectToDatabase from '../../../lib/db';
-import DevisVoletRenovation from '../../../models/DevisVoletRenovation';
+import connectToDatabase from '@/lib/db';
+import DevisVoletRenovation from '@/models/DevisVoletRenovation';
 
 export async function DELETE(req: NextRequest) {
   try {

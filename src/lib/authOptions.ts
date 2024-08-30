@@ -1,4 +1,4 @@
-/* lib/authOption.ts */
+/* lib/authOptions.ts */
 
 import { NextAuthOptions, Session, User, DefaultSession } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
@@ -27,7 +27,7 @@ declare module 'next-auth' {
 }
 
 type UserType = {
-  _id: string;
+  _id: mongoose.Types.ObjectId; // Ensure _id is treated as ObjectId
   username: string;
   email: string;
   password?: string;
@@ -73,7 +73,7 @@ export const authOptions: NextAuthOptions = {
         try {
           await connectToDatabase();
 
-          const user = await UserModel.findOne({ email: credentials.email }) as UserType | null;
+          const user = await UserModel.findOne({ email: credentials.email }).exec() as UserType | null;
           if (!user) {
             console.error('No user found with this email:', credentials.email);
             return null;
@@ -102,20 +102,26 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }: { token: JWT, user?: User }) {
       if (user) {
-        token.id = user.id;  // Ensure ID is treated as a string
+        token.id = user.id; // Ensure ID is treated as a string
         token.role = user.role;
       } else {
         // Fetch the user from the database if it's not present
         if (token?.id) {
           await connectToDatabase();
-          const dbUser = await UserModel.findById(token.id).lean().exec(); // Lean and exec to avoid Mongoose conversion issues
-          if (dbUser) {
-            token.role = dbUser.role;
+          try {
+            const objectId = new mongoose.Types.ObjectId(token.id as string); // Ensure ID is a valid ObjectId
+            const dbUser = await UserModel.findById(objectId).lean().exec();
+            if (dbUser) {
+              token.role = dbUser.role;
+            }
+          } catch (error) {
+            console.error('Invalid ObjectId or error fetching user:', error);
           }
         }
       }
       return token;
-    },    
+    },
+    
     async session({ session, token }: { session: Session, token: JWT }) {
       console.log('Session Callback - Token Role:', token.role);
       if (token) {
@@ -124,33 +130,35 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    
     async signIn({ user }: { user: User }) {
       try {
         await connectToDatabase();
-    
-        const existingUser = await UserModel.findOne({ email: user.email as string }) as UserType | null;
-    
+
+        const existingUser = await UserModel.findOne({ email: user.email as string }).exec() as UserType | null;
+
         if (existingUser) {
           user.role = existingUser.role; // Assign the existing user's role
         } else {
           // If the user is signing in for the first time, set the role to 'Visiteur'
           const newUser = new UserModel({
-            _id: new mongoose.Types.ObjectId().toString(), // Ensure _id is set
+            _id: new mongoose.Types.ObjectId(), // Create a new ObjectId instance
             username: user.name!,
             email: user.email as string,
             role: 'Visiteur', // Set role to 'Visiteur' for first-time users
-          }) as UserType;
-    
+          });
+
           await newUser.save();
           user.role = newUser.role; // Assign the new user's role to the session
         }
-    
+
         return true;
       } catch (error) {
         console.error('Error during sign-in:', error);
         return false;
       }
-    },    
+    },
+
     async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
       return url.startsWith(baseUrl) ? url : baseUrl;
     },

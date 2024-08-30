@@ -24,7 +24,7 @@ const DevisCrees: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("/api/getDevis");
+      const response = await fetch("/api/devis/getDevis");
       const data = await response.json();
       setDevis(data);
     } catch (error) {
@@ -84,7 +84,7 @@ const DevisCrees: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      const response = await fetch("/api/deleteDevis", {
+      const response = await fetch("/api/devis/deleteDevis", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

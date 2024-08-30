@@ -21,7 +21,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // Handle valid auth paths and existing pages
-  const validAuthPaths = ['/auth/signin', '/auth/signup', '/auth/reset-password']; // List valid auth paths
+  const validAuthPaths = ['/auth/signin', '/auth/signup', '/auth/reset-password'];
   const isAuthPath = pathname.startsWith('/auth');
 
   if (!validAuthPaths.includes(pathname) && isAuthPath) {
@@ -40,9 +40,18 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/', req.url));
   }
 
+  // Role-based access control for the dashboard
+  if (pathname.startsWith('/admin')) {
+    const userRole = token?.role;
+
+    if (userRole !== 'SuperAdmin' && userRole !== 'Admin') {
+      return NextResponse.redirect(new URL('/unauthorized', req.url));
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/:path*'], // Apply middleware to all routes
+  matcher: ['/:path*'],
 };

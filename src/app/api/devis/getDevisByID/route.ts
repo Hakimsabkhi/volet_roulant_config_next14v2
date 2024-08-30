@@ -1,6 +1,6 @@
-// src/app/api/getDevisByID/route.ts
+// src/app/api/devis/getDevisByID/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import connectToDatabase from '@/lib/db'; // Adjust the import path as needed
+import connectToDatabase from '@/lib/db';
 import DevisVoletRenovation from '@/models/DevisVoletRenovation'; // Adjust the import path as needed
 import { Types } from 'mongoose';
 

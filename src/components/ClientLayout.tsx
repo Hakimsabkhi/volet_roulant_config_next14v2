@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import CreateDevisButton from '@/components/CreateDevisButton';
 import Card from '@/components/Card';
-import UserSection from '@/components/UserSection';
+import Dropdown from "./Dropdown";
 
 const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
@@ -23,7 +23,7 @@ const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         <div className="fixed top-[3%] right-[3%] z-[1000] flex gap-4">
           <CreateDevisButton />
           <Card/>
-          <UserSection />
+          <Dropdown />
         </div>
         <div className="mt-32 ml-64 flex flex-col gap-8 h-full">
           {children}

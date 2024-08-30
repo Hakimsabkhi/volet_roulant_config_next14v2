@@ -150,7 +150,7 @@ const MultiStepInfoDisplay: React.FC = () => {
     }
 
     try {
-      const response = await fetch("/api/updateDevis", {
+      const response = await fetch("/api/devis/updateDevis", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -226,7 +226,7 @@ const MultiStepInfoDisplay: React.FC = () => {
     }
   
     try {
-      const response = await fetch("/api/saveData", {
+      const response = await fetch("/api/devis/saveDevisData", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
