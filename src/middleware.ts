@@ -20,10 +20,14 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // If no token is found, redirect to sign-in page
+  if (!token) {
+    return NextResponse.redirect(new URL('/auth/signin', req.url));
+  }
 
   // Role-based access control for the dashboard
   if (pathname.startsWith('/admin')) {
-    const userRole = token?.role;
+    const userRole = token.role;
 
     if (userRole !== 'SuperAdmin' && userRole !== 'Admin') {
       return NextResponse.redirect(new URL('/unauthorized', req.url));
