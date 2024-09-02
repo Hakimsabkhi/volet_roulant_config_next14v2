@@ -8,7 +8,7 @@ import ClientLayout from '@/components/ClientLayout';
 import SessionProviderWrapper from '../components/SessionProviderWrapper';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
 
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
-  // Fetch the session data
-  const session = await getServerSession(authOptions);
+  // Use useMemo to memoize the session
+  const session = await useMemo(() => getServerSession(authOptions), []);
 
   return (
     <html lang="en">

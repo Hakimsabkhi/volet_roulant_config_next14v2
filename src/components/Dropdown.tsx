@@ -1,13 +1,13 @@
-"use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import Image from 'next/image';
 import { userIcon } from '../assets/imageModule';
+import { useSessionData } from '@/content/session/useSessionData'; // Adjust the import path as necessary
 
 const Dropdown: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { data: session } = useSession();
+  const { session, loading } = useSessionData();
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -42,10 +42,6 @@ const Dropdown: React.FC = () => {
     };
   }, [dropdownOpen, handleClickOutside, handleScroll]);
 
-  const userName = session?.user?.name || "Unknown User";
-  const userEmail = session?.user?.email || "No Email";
-  const userRole = session?.user?.role || "User";
-
   return (
     <div className="relative" ref={dropdownRef}>
       <button
@@ -59,7 +55,7 @@ const Dropdown: React.FC = () => {
         <Image src={userIcon} loading="eager" alt="User Icon" className="button-icon" width={40} height={40} />
       </button>
 
-      {dropdownOpen && (
+      {dropdownOpen && !loading && session && (
         <div
           id="dropdownAvatar"
           className="absolute right-0 p-2 mt-4 bg-primary rounded-md shadow-lg z-[1000] w-fit"
@@ -67,37 +63,25 @@ const Dropdown: React.FC = () => {
           aria-labelledby="dropdownUserButton"
         >
           <div className="px-4 py-3 text-sm text-white border-b">
-            <div>{userName}</div>
-            <div>{userEmail}</div>
-            <div>Role: {userRole}</div>
+            <div>{session.user?.name}</div>
+            <div>{session.user?.email}</div>
+            <div>Role: {session.user?.role}</div>
           </div>
-          <ul
-            className="py-2 text-sm text-white"
-            aria-labelledby="dropdownUserButton"
-          >
+          <ul className="py-2 text-sm text-white" aria-labelledby="dropdownUserButton">
             <li>
-              <a
-                href="/"
-                className="block w-full px-4 py-2 text-sm text-left text-white hover:bg-white hover:text-black"
-              >
+              <a href="/" className="block w-full px-4 py-2 text-sm text-left text-white hover:bg-white hover:text-black">
                 Page d&apos;accueil
               </a>
             </li>
-            {(userRole === 'SuperAdmin' || userRole === 'Admin') && (
+            {(session.user?.role === 'SuperAdmin' || session.user?.role === 'Admin') && (
               <li>
-                <a
-                  href="/admin/dashboard"
-                  className="block w-full px-4 py-2 text-sm text-left text-white hover:bg-white hover:text-black"
-                >
+                <a href="/admin/dashboard" className="block w-full px-4 py-2 text-sm text-left text-white hover:bg-white hover:text-black">
                   Dashboard
                 </a>
               </li>
             )}
             <li>
-              <a
-                href="#"
-                className="block w-full px-4 py-2 text-sm text-left text-white hover:bg-white hover:text-black"
-              >
+              <a href="#" className="block w-full px-4 py-2 text-sm text-left text-white hover:bg-white hover:text-black">
                 Settings
               </a>
             </li>
