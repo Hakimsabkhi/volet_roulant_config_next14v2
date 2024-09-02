@@ -17,10 +17,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Redirect to sign-in if no token is found and not already on the sign-in page
-  if (!token && pathname !== '/auth/signin') {
-    return NextResponse.redirect(new URL('/auth/signin', req.url));
-  }
+
 
   return NextResponse.next();
 }
