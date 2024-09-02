@@ -3,43 +3,54 @@ import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   const { pathname } = req.nextUrl;
 
-  // Log token and path for debugging
-  console.log(`Token: ${token ? JSON.stringify(token) : 'Not Found'}, Path: ${pathname}`);
+  // Paths that do not require authentication
+  const publicPaths = [
+    '/_next/',
+    '/api/auth/',
+    '/api/',
+    '/styles/',
+    '/public/',
+    '/auth/signin',
+    '/auth/verify-request',
+    '/favicon.ico', // Example for static files
+  ];
 
-  // Allow access to specific paths without authentication
-  if (
-    pathname.startsWith('/_next/') ||  // Next.js internal paths
-    pathname.startsWith('/api/auth/') ||  // Authentication routes
-    pathname.startsWith('/api/') ||  // API routes
-    pathname.startsWith('/styles/') ||  // Stylesheets
-    pathname.startsWith('/public/') ||  // Public assets
-    pathname.includes('.')  // Static files like images, icons, etc.
-  ) {
+  // Allow access to public paths or static files
+  if (publicPaths.some(path => pathname.startsWith(path)) || pathname.includes('.')) {
     return NextResponse.next();
   }
 
-  // Redirect to sign-in if no token is found and not already on the sign-in page
-  if (!token) {
-    if (pathname !== '/auth/signin' && !pathname.startsWith('/auth/verify-request')) {
+  // Attempt to retrieve token
+  try {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+    // Log token presence and path for debugging
+    console.log(`Token: ${token ? 'Found' : 'Not Found'}, Path: ${pathname}`);
+
+    if (!token) {
+      // Redirect to sign-in if no token and not accessing a public path
       return NextResponse.redirect(new URL('/auth/signin', req.url));
     }
-  } else {
-    // Additional log to confirm the presence of a valid token and role
-    console.log(`User authenticated: Role - ${token?.role || 'None'}`);
-  }
 
-  // Role-based access control for the dashboard
-  if (pathname.startsWith('/admin')) {
-    const userRole = token?.role;
+    // Role-based access control for admin paths
+    if (pathname.startsWith('/admin')) {
+      const userRole = token.role;
+      console.log(`User authenticated: Role - ${userRole || 'None'}`);
 
-    if (userRole !== 'SuperAdmin' && userRole !== 'Admin') {
-      return NextResponse.redirect(new URL('/unauthorized', req.url));
+      if (userRole !== 'SuperAdmin' && userRole !== 'Admin') {
+        return NextResponse.redirect(new URL('/unauthorized', req.url));
+      }
     }
+
+  } catch (error) {
+    console.error('Error fetching token:', error);
+    // Redirect to sign-in in case of error
+    return NextResponse.redirect(new URL('/auth/signin', req.url));
   }
 
+  // If all checks pass, continue with the request
   return NextResponse.next();
 }
 
