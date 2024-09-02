@@ -13,8 +13,10 @@ export async function middleware(req: NextRequest) {
     '/styles/',
     '/public/',
     '/auth/signin',
+    '/auth/signout',
     '/auth/verify-request',
-    '/favicon.ico', // Example for static files
+    '/auth/error',
+    '/favicon.ico'
   ];
 
   // Allow access to public paths or static files
