@@ -22,8 +22,13 @@ export async function middleware(req: NextRequest) {
   }
 
   // Redirect to sign-in if no token is found and not already on the sign-in page
-  if (!token && pathname !== '/auth/signin') {
-    return NextResponse.redirect(new URL('/auth/signin', req.url));
+  if (!token) {
+    if (pathname !== '/auth/signin' && !pathname.startsWith('/auth/verify-request')) {
+      return NextResponse.redirect(new URL('/auth/signin', req.url));
+    }
+  } else {
+    // Additional log to confirm the presence of a valid token and role
+    console.log(`User authenticated: Role - ${token?.role || 'None'}`);
   }
 
   // Role-based access control for the dashboard
