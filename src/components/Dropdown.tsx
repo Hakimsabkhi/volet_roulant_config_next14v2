@@ -90,7 +90,7 @@ const Dropdown: React.FC = () => {
           <div className="py-2">
             <button
               onClick={() => {
-                signOut({ callbackUrl: '/auth/signin' });
+                signOut();
                 closeDropdown();
               }}
               className="block w-full px-4 py-2 text-sm text-left text-white hover:bg-white hover:text-black"

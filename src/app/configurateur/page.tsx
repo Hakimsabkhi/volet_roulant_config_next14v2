@@ -56,10 +56,6 @@ const ConfigurateurContent: React.FC = () => {
     return;
   }
 
-  if (!session) {
-    router.push("/auth/signin"); // Redirect to sign-in if not authenticated
-    return;
-  }
   return (
     <div className="w-full h-full text-[#fff]">
       <Viewer setPosition={setPosition} setTarget={setTarget} />
