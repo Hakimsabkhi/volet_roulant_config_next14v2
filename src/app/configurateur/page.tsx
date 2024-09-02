@@ -22,7 +22,7 @@ const ConfigurateurContent: React.FC = () => {
 
     if (id) {
       // Fetch the Devis data based on the id from the backend
-      fetch(`${process.env.NEXTAUTH_URL}/api/devis/getDevisByID?id=${id}`)
+      fetch(`/api/devis/getDevisByID?id=${id}`)
         .then((response) => response.json())
         .then((selectedDevis) => {
           if (selectedDevis) {

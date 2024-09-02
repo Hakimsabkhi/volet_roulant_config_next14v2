@@ -26,6 +26,10 @@ import ConfigIconIcon from './ConfigIcon.png';
 import userIcon from './userIcon.png';
 import PanierIcon from './panier.png';
 import devisIcon from './devisIcon.png';
+import rideauMetaliqueIMG from './rideaux-metalique-image.png';
+import voletRoulantsIMG from './volet-roulants-image.png';
+import storeBanneIMG from './store-banne.png';
+import porteGarageIMG from './porte-garage.png';
 
 
-export { Droite, EnApplique, Gauche, EnInverse, Filaire, Radio, Manuel, Sangle, Manivelle, MoteurBeker, SousLanteau, SousLanteauInverse, AppliqueEnApplique, AppliqueEncastre, Lame41Image, Lame55Image ,Sans,Telecommand, outsideViewIcon, insideViewIcon, OsideViewIcon, IsideViewIcon, enableRotation, disableRotation, ConfigIconIcon, userIcon , PanierIcon, devisIcon}
+export { Droite, EnApplique, Gauche, EnInverse, Filaire, Radio, Manuel, Sangle, Manivelle, MoteurBeker, SousLanteau, SousLanteauInverse, AppliqueEnApplique, AppliqueEncastre, Lame41Image, Lame55Image ,Sans,Telecommand, outsideViewIcon, insideViewIcon, OsideViewIcon, IsideViewIcon, enableRotation, disableRotation, ConfigIconIcon, userIcon , PanierIcon, devisIcon, rideauMetaliqueIMG, voletRoulantsIMG, storeBanneIMG, porteGarageIMG}

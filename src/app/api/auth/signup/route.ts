@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db';
 import User from '@/models/User';
 import bcrypt from 'bcryptjs';
-import mongoose from 'mongoose';
 
 export async function POST(req: NextRequest) {
   try {
@@ -37,7 +36,6 @@ export async function POST(req: NextRequest) {
 
     // Create a new user instance
     const newUser = new User({
-      _id: new mongoose.Types.ObjectId().toString(), // Ensure _id is a string
       username,
       email,
       password: hashedPassword,

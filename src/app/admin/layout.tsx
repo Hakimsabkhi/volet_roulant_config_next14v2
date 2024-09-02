@@ -8,9 +8,9 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
-    <div className="p-4">
+    <div className="h-full">
       <AdminDashboardNavigation /> {/* Include the new component here */}
-      <main className="mt-8">{children}</main>
+      <main className="h-full">{children}</main>
     </div>
   );
 };

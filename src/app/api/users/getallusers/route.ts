@@ -16,14 +16,24 @@ export async function GET(req: NextRequest) {
 
     // Fetch the user associated with the token
     const authenticatedUser = await User.findOne({ email: token.email }).exec();
-    if (!authenticatedUser || !['SuperAdmin', 'Admin'].includes(authenticatedUser.role)) {
+    if (!authenticatedUser) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Fetch all users except the authenticated user
-    const users = await User.find({ email: { $ne: authenticatedUser.email } }).exec();
+    let users;
 
-    // Return the fetched users, excluding the authenticated user
+    if (authenticatedUser.role === 'SuperAdmin') {
+      // SuperAdmin can see all users, including other SuperAdmins
+      users = await User.find().exec();
+    } else if (authenticatedUser.role === 'Admin') {
+      // Admin can see all users except other Admins
+      users = await User.find({ role: { $ne: 'Admin' } }).exec();
+    } else {
+      // If the user is not SuperAdmin or Admin, they should not have access
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Return the fetched users
     return NextResponse.json(users, { status: 200 });
   } catch (error) {
     console.error(error);

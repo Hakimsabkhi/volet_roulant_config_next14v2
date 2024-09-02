@@ -1,19 +1,17 @@
-import React from "react";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/authOptions"; // adjust the import path to where your authOptions are defined
+import React from 'react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/authOptions';
+import Greeting from '@/components/homepage/Greeting';
+import ImageAccordion from '@/components/homepage/ProductSection';
 
-const Home = async () => {
+const Home: React.FC = async () => {
   const session = await getServerSession(authOptions);
 
   return (
-    <main className="flex gap-4 justify-between w-[90%]">
-      <div className="flex flex-col gap-10">
-        <div className="flex flex-col">
-          <h1>Bienvenue, {session?.user?.name || "Utilisateur"}!</h1>
-          <p>Ceci est votre page d&apos;accueil.</p>
-        </div>
-      </div>
-    </main>
+    <div className="flex flex-col items-center">
+      <Greeting session={session} />
+      <ImageAccordion />
+    </div>
   );
 };
 

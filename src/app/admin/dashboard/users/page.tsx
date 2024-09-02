@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface User {
   _id: string;
@@ -12,23 +15,19 @@ interface User {
 const Users: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [actionLoading, setActionLoading] = useState<boolean>(false); // New state for action loading
-  const [actionError, setActionError] = useState<string | null>(null); // New state for action errors
-  const [successMessage, setSuccessMessage] = useState<string | null>(null); // New state for success messages
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        setError(null);
-        const response = await fetch(`${process.env.NEXTAUTH_URL}/api/users/getallusers`);
+        const response = await fetch(`/api/users/getallusers`);
         if (!response.ok) {
           throw new Error('Failed to fetch users');
         }
         const data = await response.json();
         setUsers(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+        toast.error(err instanceof Error ? err.message : 'An unexpected error occurred');
       } finally {
         setLoading(false);
       }
@@ -38,13 +37,11 @@ const Users: React.FC = () => {
   }, []);
 
   const deleteUser = async (id: string) => {
-    setActionLoading(true);
-    setActionError(null);
-    setSuccessMessage(null);
+    setActionLoading(id);
     console.log("Deleting user with ID:", id);
 
     try {
-      const response = await fetch(`${process.env.NEXTAUTH_URL}/api/users/deleteuserbyid`, {
+      const response = await fetch(`/api/users/deleteuserbyid`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -57,21 +54,19 @@ const Users: React.FC = () => {
       }
 
       setUsers((prevUsers) => prevUsers.filter(user => user._id !== id));
-      setSuccessMessage('User deleted successfully.');
+      toast.success('User deleted successfully.');
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      toast.error(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setActionLoading(false);
+      setActionLoading(null);
     }
   };
 
   const changeUserRole = async (userId: string, newRole: string) => {
-    setActionLoading(true);
-    setActionError(null);
-    setSuccessMessage(null);
+    setActionLoading(userId);
 
     try {
-      const response = await fetch(`${process.env.NEXTAUTH_URL}/api/users/changeUserRole`, {
+      const response = await fetch(`/api/users/changeUserRole`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -86,24 +81,20 @@ const Users: React.FC = () => {
       setUsers(users => users.map(user => 
         user._id === userId ? { ...user, role: newRole } : user
       ));
-      setSuccessMessage('User role updated successfully.');
+      toast.success('User role updated successfully.');
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      toast.error(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setActionLoading(false);
+      setActionLoading(null);
     }
   };
 
   if (loading) {
-    return <div className="p-4">Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (
-    <div className="p-4">
-      {error && <div className="text-red-500">Error: {error}</div>}
-      {actionError && <div className="text-red-500">Action Error: {actionError}</div>}
-      {successMessage && <div className="text-green-500">{successMessage}</div>}
-      
+    <div className="h-full">
       <table className="table-auto w-full mt-4">
         <thead>
           <tr>
@@ -115,26 +106,27 @@ const Users: React.FC = () => {
         <tbody>
           {users.map(user => (
             <tr key={user._id}>
-              <td className="border px-4 py-2">{user.email}</td>
-              <td className="border px-4 py-2">
+              <td className="border px-2 py-2">{user.email}</td>
+              <td className="border px-2 py-2">
                 <select
                   value={user.role}
                   onChange={(e) => changeUserRole(user._id, e.target.value)}
-                  className="bg-white border px-2 py-1"
-                  disabled={actionLoading} // Disable during action
+                  className="bg-white border px-2 py-1 w-full max-w-[150px]"
+                  disabled={actionLoading !== null} // Disable during action
                 >
                   <option value="Admin">Admin</option>
                   <option value="Consulter">Consulter</option>
                   <option value="Visiteur">Visiteur</option>
                 </select>
               </td>
-              <td className="border px-4 py-2">
+              <td className="border px-2 py-2 text-center">
                 <button
                   onClick={() => deleteUser(user._id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded"
-                  disabled={actionLoading} // Disable during action
+                  className="bg-red-500 text-white px-4 py-2 rounded w-full max-w-[120px]"
+                  disabled={actionLoading !== null} // Disable during action
+                  style={{ minWidth: '120px' }} // Ensure fixed width
                 >
-                  {actionLoading ? 'Processing...' : 'Delete'}
+                  {actionLoading === user._id ? 'Processing...' : 'Delete'}
                 </button>
               </td>
             </tr>

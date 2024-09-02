@@ -27,7 +27,7 @@ declare module 'next-auth' {
 }
 
 type UserType = {
-  _id: mongoose.Types.ObjectId; // Ensure _id is treated as ObjectId
+  _id: mongoose.Types.ObjectId;
   username: string;
   email: string;
   password?: string;
@@ -102,20 +102,21 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }: { token: JWT, user?: User }) {
       if (user) {
-        token.id = user.id; // Ensure ID is treated as a string
+        token.id = user.id;
         token.role = user.role;
       } else {
-        // Fetch the user from the database if it's not present
         if (token?.id) {
           await connectToDatabase();
           try {
-            const objectId = new mongoose.Types.ObjectId(token.id as string); // Ensure ID is a valid ObjectId
+            const objectId = new mongoose.Types.ObjectId(token.id);
             const dbUser = await UserModel.findById(objectId).lean().exec();
             if (dbUser) {
               token.role = dbUser.role;
+            } else {
+              console.error('User not found for ID:', token.id);
             }
           } catch (error) {
-            console.error('Invalid ObjectId or error fetching user:', error);
+            console.error('Error fetching user with ID:', error);
           }
         }
       }
@@ -135,12 +136,10 @@ export const authOptions: NextAuthOptions = {
       try {
         await connectToDatabase();
 
-        const existingUser = await UserModel.findOne({ email: user.email as string }).exec() as UserType | null;
+        let existingUser = await UserModel.findOne({ email: user.email }).exec() as UserType | null;
 
-        if (existingUser) {
-          user.role = existingUser.role; // Assign the existing user's role
-        } else {
-          // If the user is signing in for the first time, set the role to 'Visiteur'
+        if (!existingUser) {
+          // If the user is signing in for the first time, generate a new ObjectId
           const newUser = new UserModel({
             _id: new mongoose.Types.ObjectId(), // Create a new ObjectId instance
             username: user.name!,
@@ -149,7 +148,11 @@ export const authOptions: NextAuthOptions = {
           });
 
           await newUser.save();
-          user.role = newUser.role; // Assign the new user's role to the session
+          user.id = newUser._id.toString(); // Assign the new ObjectId to the user
+          user.role = newUser.role; // Assign the new user's role
+        } else {
+          user.id = existingUser._id.toString(); // Use the existing user's ObjectId
+          user.role = existingUser.role; // Assign the existing user's role
         }
 
         return true;
