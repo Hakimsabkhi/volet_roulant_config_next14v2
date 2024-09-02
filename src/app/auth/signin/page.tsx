@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useSession, signIn, getProviders, ClientSafeProvider } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignInPage: React.FC = () => {
   const [providers, setProviders] = useState<Record<string, ClientSafeProvider> | null>(null);
@@ -54,10 +56,12 @@ const SignInPage: React.FC = () => {
         router.push('/');
       } else {
         setError('Failed to sign in. Please check your email and password and try again.');
+        toast.error('Failed to sign in. Please check your email and password and try again.');
       }
     } catch (error) {
       console.error('Sign in error:', error);
       setError('An unexpected error occurred. Please try again.');
+      toast.error('An unexpected error occurred. Please try again.');
     }
   };
   
@@ -67,13 +71,9 @@ const SignInPage: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <ToastContainer /> {/* Add this line to display the toast notifications */}
       <div className="w-full max-w-md h-[450px]">
         <h1 className="text-2xl max-md:text-xl text-center font-bold mb-6">Sign in</h1>
-        {error && (
-          <div className="bg-red-500 text-white p-3 rounded mb-4 text-center">
-            {error}
-          </div>
-        )}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
@@ -92,30 +92,29 @@ const SignInPage: React.FC = () => {
             />
           </div>
           <div className="mb-4 relative">
-  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-    Password
-  </label>
-  <div className="relative">
-    <input
-      type={showPassword ? 'text' : 'password'}
-      name="password"
-      id="password"
-      aria-label="Password"
-      placeholder=""
-      value={credentials.password}
-      onChange={handleChange}
-      className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-gray-200 leading-tight focus:outline-none focus:shadow-outline pr-10"
-      required
-    />
-    <div
-      className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-      onClick={togglePasswordVisibility}
-    >
-      {showPassword ? <FaEye className="text-gray-600" />:<FaEyeSlash className="text-gray-600" />}
-    </div>
-  </div>
-</div>
-
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                id="password"
+                aria-label="Password"
+                placeholder=""
+                value={credentials.password}
+                onChange={handleChange}
+                className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 bg-gray-200 leading-tight focus:outline-none focus:shadow-outline pr-10"
+                required
+              />
+              <div
+                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? <FaEye className="text-gray-600" />:<FaEyeSlash className="text-gray-600" />}
+              </div>
+            </div>
+          </div>
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center h-5">
               <input
