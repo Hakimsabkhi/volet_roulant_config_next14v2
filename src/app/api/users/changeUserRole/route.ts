@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 import connectToDatabase from '@/lib/db';
 import User from '@/models/User';
+import { getToken } from 'next-auth/jwt';
 
 export async function PUT(req: NextRequest) {
   try {
@@ -19,7 +20,19 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid User ID format' }, { status: 400 });
     }
 
-    // Log the userId and attempt to find the user
+    // Extract and verify the token to identify the authenticated user
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    if (!token) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Find the authenticated user
+    const authenticatedUser = await User.findOne({ email: token.email }).exec();
+    if (!authenticatedUser) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Log the userId and attempt to find the user to be updated
     console.log('Searching for user with ID:', userId);
 
     // Convert userId to ObjectId and find the user by ID
@@ -36,6 +49,11 @@ export async function PUT(req: NextRequest) {
     // Validate the new role
     if (!['Admin', 'Consulter', 'Visiteur'].includes(newRole)) {
       return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
+    }
+
+    // Only SuperAdmins can assign the Admin role
+    if (newRole === 'Admin' && authenticatedUser.role !== 'SuperAdmin') {
+      return NextResponse.json({ error: 'Forbidden: Only SuperAdmins can assign the Admin role' }, { status: 403 });
     }
 
     // Update the user's role

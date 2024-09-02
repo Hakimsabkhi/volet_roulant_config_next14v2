@@ -23,11 +23,11 @@ export async function GET(req: NextRequest) {
     let users;
 
     if (authenticatedUser.role === 'SuperAdmin') {
-      // SuperAdmin can see all users, including other SuperAdmins
-      users = await User.find().exec();
+      // SuperAdmin can see all users except other SuperAdmins
+      users = await User.find({ role: { $ne: 'SuperAdmin' } }).exec();
     } else if (authenticatedUser.role === 'Admin') {
-      // Admin can see all users except other Admins
-      users = await User.find({ role: { $ne: 'Admin' } }).exec();
+      // Admin can see all users except Admins and SuperAdmins
+      users = await User.find({ role: { $nin: ['Admin', 'SuperAdmin'] } }).exec();
     } else {
       // If the user is not SuperAdmin or Admin, they should not have access
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });

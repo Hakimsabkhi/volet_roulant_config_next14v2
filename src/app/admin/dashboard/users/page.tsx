@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { useSession } from "next-auth/react";
 
 interface User {
   _id: string;
@@ -13,9 +14,12 @@ interface User {
 }
 
 const Users: React.FC = () => {
+  const { data: session } = useSession();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+
+  const isSuperAdmin = session?.user?.role === "SuperAdmin";
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -112,9 +116,9 @@ const Users: React.FC = () => {
                   value={user.role}
                   onChange={(e) => changeUserRole(user._id, e.target.value)}
                   className="bg-white border px-2 py-1 w-full max-w-[150px]"
-                  disabled={actionLoading !== null} // Disable during action
+                  disabled={actionLoading === user._id} // Disable only during the action for this user
                 >
-                  <option value="Admin">Admin</option>
+                  {isSuperAdmin && <option value="Admin">Admin</option>}
                   <option value="Consulter">Consulter</option>
                   <option value="Visiteur">Visiteur</option>
                 </select>
@@ -123,7 +127,7 @@ const Users: React.FC = () => {
                 <button
                   onClick={() => deleteUser(user._id)}
                   className="bg-red-500 text-white px-4 py-2 rounded w-full max-w-[120px]"
-                  disabled={actionLoading !== null} // Disable during action
+                  disabled={actionLoading === user._id} // Disable only during the action for this user
                   style={{ minWidth: '120px' }} // Ensure fixed width
                 >
                   {actionLoading === user._id ? 'Processing...' : 'Delete'}
@@ -133,6 +137,7 @@ const Users: React.FC = () => {
           ))}
         </tbody>
       </table>
+      <ToastContainer />
     </div>
   );
 };
