@@ -4,11 +4,16 @@ import { signOut } from "next-auth/react";
 import Image from 'next/image';
 import { userIcon } from '../assets/imageModule';
 import { useSessionData } from '@/content/session/useSessionData'; // Adjust the import path as necessary
+import { useRouter } from "next/navigation"; // Import useRouter
+import { clearCart } from "@/store/cartSlice";
+import { useDispatch } from "react-redux";
 
 const Dropdown: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { session, loading } = useSessionData();
+  const router = useRouter(); // Initialize useRouter
+  const dispatch = useDispatch(); 
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -42,6 +47,17 @@ const Dropdown: React.FC = () => {
       document.removeEventListener("scroll", handleScroll, true);
     };
   }, [dropdownOpen, handleClickOutside, handleScroll]);
+
+  const handleSignOut = () => {
+    signOut({ redirect: false })
+      .then(() => {
+        dispatch(clearCart()); // Clear the cart on logout
+        router.push("/auth/signin");
+      })
+      .catch((error) => {
+        console.error("Failed to sign out:", error);
+      });
+  };
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -89,10 +105,7 @@ const Dropdown: React.FC = () => {
           </ul>
           <div className="py-2">
             <button
-              onClick={() => {
-                signOut();
-                closeDropdown();
-              }}
+              onClick={handleSignOut}
               className="block w-full px-4 py-2 text-sm text-left text-white hover:bg-white hover:text-black"
             >
               Sign out

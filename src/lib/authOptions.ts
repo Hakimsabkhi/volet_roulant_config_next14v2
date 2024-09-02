@@ -105,7 +105,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.role = user.role;
       } else {
-        if (token?.id) {
+        if (token?.id && typeof token.id === 'string') {
           await connectToDatabase();
           try {
             const objectId = new mongoose.Types.ObjectId(token.id);
@@ -135,9 +135,9 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user }: { user: User }) {
       try {
         await connectToDatabase();
-
+    
         let existingUser = await UserModel.findOne({ email: user.email }).exec() as UserType | null;
-
+    
         if (!existingUser) {
           // If the user is signing in for the first time, generate a new ObjectId
           const newUser = new UserModel({
@@ -146,21 +146,22 @@ export const authOptions: NextAuthOptions = {
             email: user.email as string,
             role: 'Visiteur', // Set role to 'Visiteur' for first-time users
           });
-
-          await newUser.save();
-          user.id = newUser._id.toString(); // Assign the new ObjectId to the user
-          user.role = newUser.role; // Assign the new user's role
+    
+          const savedUser = await newUser.save();
+          user.id = (savedUser._id as mongoose.Types.ObjectId).toString(); // Explicitly cast _id to ObjectId and then to string
+          user.role = savedUser.role; // Assign the new user's role
         } else {
           user.id = existingUser._id.toString(); // Use the existing user's ObjectId
           user.role = existingUser.role; // Assign the existing user's role
         }
-
+    
         return true;
       } catch (error) {
         console.error('Error during sign-in:', error);
         return false;
       }
     },
+    
 
     async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
       return url.startsWith(baseUrl) ? url : baseUrl;

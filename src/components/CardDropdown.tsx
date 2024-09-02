@@ -1,36 +1,33 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/index";
 import { removeFromCart } from "@/store/cartSlice";
 import { devisIcon, PanierIcon } from "@/assets/imageModule";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation";
 
 const CardDropdown: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
-    ) {
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
       setDropdownOpen(false);
     }
-  };
+  }, []);
 
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     setDropdownOpen(false);
-  };
+  }, []);
 
   useEffect(() => {
     if (dropdownOpen) {
@@ -45,7 +42,7 @@ const CardDropdown: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("scroll", handleScroll, true);
     };
-  }, [dropdownOpen]);
+  }, [dropdownOpen, handleClickOutside, handleScroll]);
 
   const handleRemoveFromCart = (id: string) => {
     dispatch(removeFromCart(id));
@@ -56,8 +53,7 @@ const CardDropdown: React.FC = () => {
   const totalTTC = cartItems.reduce((sum, item) => sum + item.totalTTC, 0);
 
   const handleCheckout = () => {
-    // Assuming you pass the necessary data through the router
-    router.push("/checkout"); // Replace "/checkout" with your actual checkout page route
+    router.push("/checkout");
   };
 
   return (
@@ -67,6 +63,8 @@ const CardDropdown: React.FC = () => {
         onClick={toggleDropdown}
         className="w-[50px] h-[50px] bg-none border-none cursor-pointer flex items-center justify-center bg-cbutton shadow-[0_2px_6px_rgba(0,0,0,0.952)] rounded-[4px] transition-shadow duration-300 ease z-[1000] hover:bg-cwhite focus:bg-cwhite relative"
         type="button"
+        aria-expanded={dropdownOpen}
+        aria-controls="dropdownCart"
       >
         <Image
           src={PanierIcon}
@@ -128,7 +126,7 @@ const CardDropdown: React.FC = () => {
                 <p className="font-bold">Total TTC: {totalTTC.toFixed(2)}€</p>
               </div>
               <button
-                onClick={handleCheckout} // Handle the checkout process
+                onClick={handleCheckout}
                 className="nav-btn hover:bg-NavbuttonH uppercase font-bold px-2 mt-2 w-full"
               >
                 Valider mes devis et payer
