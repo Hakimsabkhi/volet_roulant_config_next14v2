@@ -1,43 +1,47 @@
-/* src/app/api/devis/getDevis */
-
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db';
 import DevisVoletRenovation from '@/models/DevisVoletRenovation';
-import User from '@/models/User';
 import { getToken } from 'next-auth/jwt';
+import User from '@/models/User';
+
+async function getUserFromToken(req: NextRequest) {
+  console.log('Request Headers:', req.headers); // Log request headers
+  console.log('Cookies:', req.cookies); // Log cookies if available
+
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  console.log('Retrieved Token:', token); // Log the token to verify its existence
+  
+  if (!token) {
+    return { error: 'Unauthorized', status: 401 };
+  }
+
+  const user = await User.findOne({ email: token.email }).exec();
+  if (!user) {
+    return { error: 'User not found', status: 404 };
+  }
+
+  return { user };
+}
 
 export async function GET(req: NextRequest) {
   try {
-    // Connect to the database
     await connectToDatabase();
 
-    // Extract and verify the token
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-    if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const result = await getUserFromToken(req);
+    if ('error' in result) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
     }
+    const { user } = result;
 
-    // Fetch the user associated with the token
-    const user = await User.findOne({ email: token.email }).exec();
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    // Fetch DevisVoletRenovation documents for the user
+    // Retrieve all DevisVoletRenovation documents associated with the logged-in user
     const devis = await DevisVoletRenovation.find({ user: user._id }).exec();
 
-    // Return the fetched data
     return NextResponse.json(devis, { status: 200 });
   } catch (error) {
-    console.error(error);
-
-    // Return error details only in development, generic message in production
-    return NextResponse.json({
-      error: 'Error fetching data',
-      details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined,
-    }, { status: 500 });
+    console.error('Error retrieving devis:', error);
+    return NextResponse.json(
+      { error: 'Error retrieving devis', details: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
-
-// This explicitly marks the route as dynamic
-
