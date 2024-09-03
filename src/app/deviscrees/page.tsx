@@ -21,7 +21,7 @@ const useFetchDevis = (session: Session | null, status: "loading" | "authenticat
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/devis/getDevis`, {
+        const response = await fetch(`/api/devis/getdevis`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });

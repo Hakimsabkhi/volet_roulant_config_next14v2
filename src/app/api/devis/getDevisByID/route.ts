@@ -1,4 +1,4 @@
-// src/app/api/devis/getDevisByID/route.ts
+// src/app/api/devis/getdevisbyid/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db';
 import DevisVoletRenovation from '@/models/DevisVoletRenovation'; // Adjust the import path as needed
