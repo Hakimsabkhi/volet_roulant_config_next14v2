@@ -1,73 +1,57 @@
-"use client"; // Mark this file as a client component
+"use client";
 
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import DevisTable from "@/components/DevisTable";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import FilterBar from "@/components/FilterBar";
-import Pagination from "@/components/Pagination";
-import { Devis } from "../../interfaces";
-import { Session } from "next-auth";
-// Constants
-const ITEMS_PER_PAGE = 3;
+import Pagination from "@/components/Pagination"; // Import Pagination
+import { Devis } from "@/interfaces"; // Import the Devis interface
 
-// Custom hook for fetching devis
-const useFetchDevis = (session: Session | null, status: "loading" | "authenticated" | "unauthenticated") => {
-  const [devis, setDevis] = useState<Devis[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/devis/getdevis`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
 
-        if (!response.ok) throw new Error("Failed to fetch devis. Please try again later.");
-
-        const data: Devis[] = await response.json();
-        setDevis(data);
-      } catch (error) {
-        setError("Error fetching devis. Please check your connection.");
-        console.error("Error fetching devis:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (session && status === "authenticated") {
-      fetchData();
-    }
-  }, [session, status]);
-
-  return { devis, loading, error, setDevis };
-};
+const ITEMS_PER_PAGE = 3; // Define how many items you want per page
 
 const DevisCrees: React.FC = () => {
   const { data: session, status } = useSession();
-  const { devis, loading, error, setDevis } = useFetchDevis(session, status);
-
+  const [devis, setDevis] = useState<Devis[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<{
     day: number;
     month: number;
     year: number;
-  } | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  }>();
+  const [currentPage, setCurrentPage] = useState(1); // State to track current page
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("/api/devis/getdevis");
+      const data = await response.json();
+      setDevis(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (session) {
+      fetchData();
+    }
+  }, [session]);
 
   const handleFilterChange = (
     selectedFilter: string,
     date?: { day: number; month: number; year: number }
   ) => {
     setFilter(selectedFilter);
-    setSelectedDate(date || null);
+    setSelectedDate(date);
     setCurrentPage(1); // Reset to the first page when filters are applied
   };
 
-  const filteredAndPaginatedDevis = useMemo(() => {
+  const filteredDevis = useMemo(() => {
     let filtered = [...devis];
 
     if (filter === "recent") {
@@ -91,50 +75,50 @@ const DevisCrees: React.FC = () => {
       });
     }
 
+    return filtered;
+  }, [filter, devis, selectedDate]);
+
+  const paginatedDevis = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
     const end = start + ITEMS_PER_PAGE;
-    return filtered.slice(start, end);
-  }, [filter, devis, selectedDate, currentPage]);
+    return filteredDevis.slice(start, end);
+  }, [filteredDevis, currentPage]);
 
-  const handleDelete = useCallback(async (id: string) => {
+  const handleDelete = async (id: string) => {
     try {
-      const response = await fetch('/api/devis/deleteDevis', {
+      const response = await fetch("/api/deleteDevis", {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ id }),
       });
-  
-      if (!response.ok) throw new Error("Error deleting data");
-  
-      setDevis((prevDevis) => prevDevis.filter((devisItem) => devisItem._id !== id));
-  
-      // Recalculate pagination if necessary
-      if ((currentPage - 1) * ITEMS_PER_PAGE >= filteredAndPaginatedDevis.length - 1) {
-        setCurrentPage((prev) => Math.max(prev - 1, 1));
-      }
-    } catch (error) {
-      console.error("Failed to delete devis:", error);
-    }
-  }, [currentPage, filteredAndPaginatedDevis.length, setDevis]);
-  
-  if (status === "loading" || loading) {
-    return <LoadingSpinner />;
-  }
 
-  if (error) {
-    return <div className="error">{error}</div>;
+      if (!response.ok) {
+        throw new Error("Error deleting data");
+      }
+
+      // Remove the deleted item from the state
+      setDevis(devis.filter((devisItem) => devisItem._id !== id));
+    } catch (error) {
+      console.error("Failed to delete data:", error);
+    }
+  };
+
+  if (status === "loading" || loading) {
+    return <LoadingSpinner />; // Show a loading state while the session or data is being fetched
   }
 
   return (
     <main className="flex justify-center h-full">
-      <div className="w-[95%] h-full flex flex-col gap-8 justify-between items-center">
-        <FilterBar onFilterChange={handleFilterChange} />
-        <DevisTable devis={filteredAndPaginatedDevis} handleDelete={handleDelete} />
-        <Pagination
-          currentPage={currentPage}
-          totalPages={Math.ceil(devis.length / ITEMS_PER_PAGE)}
-          onPageChange={setCurrentPage}
-        />
+        <div className=" w-[95%] h-full flex flex-col gap-8 justify-between items-center">
+          <FilterBar onFilterChange={handleFilterChange} />
+          <DevisTable devis={paginatedDevis} handleDelete={handleDelete} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(filteredDevis.length / ITEMS_PER_PAGE)}
+            onPageChange={setCurrentPage}
+          />      
       </div>
     </main>
   );
