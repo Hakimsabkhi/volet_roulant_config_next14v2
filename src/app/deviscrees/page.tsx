@@ -1,3 +1,5 @@
+// src/app/deviscrees/page.tsx
+
 "use client"; // Mark this file as a client component
 
 import React, { useEffect, useState, useMemo } from "react";
@@ -6,7 +8,7 @@ import DevisTable from "@/components/DevisTable";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import FilterBar from "@/components/FilterBar";
 import Pagination from "@/components/Pagination";
-import { Devis } from "../../interfaces"; // Import Pagination
+import { Devis } from "../../interfaces";
 
 const ITEMS_PER_PAGE = 3;
 
@@ -21,14 +23,19 @@ const DevisCrees: React.FC = () => {
     year: number;
   }>();
   const [currentPage, setCurrentPage] = useState(1);
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`/api/devis/getDevis`);
+      const response = await fetch(`${baseUrl}/api/devis/getDevis`);
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
       const data = await response.json();
       setDevis(data);
     } catch (error) {
       console.error("Error fetching data:", error);
+      // Optionally, display an error message to the user here
     } finally {
       setLoading(false);
     }
