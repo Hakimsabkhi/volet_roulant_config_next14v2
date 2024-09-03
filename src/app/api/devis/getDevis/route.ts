@@ -40,4 +40,4 @@ export async function GET(req: NextRequest) {
 }
 
 // This explicitly marks the route as dynamic
-export const dynamic = 'force-dynamic';
+
