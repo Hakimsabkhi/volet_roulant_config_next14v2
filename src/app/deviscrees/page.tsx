@@ -1,8 +1,6 @@
-// src/app/deviscrees/page.tsx
-
 "use client"; // Mark this file as a client component
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import DevisTable from "@/components/DevisTable";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -23,7 +21,7 @@ const DevisCrees: React.FC = () => {
     year: number;
   }>();
   const [currentPage, setCurrentPage] = useState(1);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,19 +35,19 @@ const DevisCrees: React.FC = () => {
           const data: Devis[] = await response.json();
           setDevis(data);
         } else {
-          console.error("Failed to fetch addresses");
+          console.error("Failed to fetch devis");
         }
       } catch (error) {
-        console.error("Error fetching addresses:", error);
+        console.error("Error fetching devis:", error);
       } finally {
-        setLoading(false); // Set loading to false after fetching data
+        setLoading(false);
       }
     };
   
-    if (session) {
+    if (session && status === "authenticated") {
       fetchData();
     }
-  }, [session]);
+  }, [session, status]);
   
 
   const handleFilterChange = (
@@ -94,7 +92,7 @@ const DevisCrees: React.FC = () => {
     return filteredDevis.slice(start, end);
   }, [filteredDevis, currentPage]);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
     try {
       const response = await fetch('/api/devis/deleteDevis', {
         method: "DELETE",
@@ -109,11 +107,11 @@ const DevisCrees: React.FC = () => {
       }
 
       // Optimistically update the local state
-      setDevis(devis.filter((devisItem) => devisItem._id !== id));
+      setDevis((prevDevis) => prevDevis.filter((devisItem) => devisItem._id !== id));
     } catch (error) {
-      console.error("Failed to delete data:", error);
+      console.error("Failed to delete devis:", error);
     }
-  };
+  }, []);
 
   if (status === "loading" || loading) {
     return <LoadingSpinner />;
@@ -135,4 +133,3 @@ const DevisCrees: React.FC = () => {
 };
 
 export default DevisCrees;
-
