@@ -26,7 +26,7 @@ export default function AdressePage() {
     // Fetch existing addresses when the component loads
     const fetchAddresses = async () => {
       try {
-        const response = await fetch(`/api/adresse/save`, {
+        const response = await fetch(`/api/adresse/getadresse`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
