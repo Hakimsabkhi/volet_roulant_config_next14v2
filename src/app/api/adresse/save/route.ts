@@ -18,66 +18,6 @@ async function getUserFromToken(req: NextRequest) {
   return { user };
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    await connectToDatabase();
-
-    const result = await getUserFromToken(req);
-    if ('error' in result) {
-      return NextResponse.json({ error: result.error }, { status: result.status });
-    }
-    const { user } = result;
-
-    const body = await req.json();
-
-    const newAddress = new AdresseLivraison({
-      ...body,
-      client: user._id,
-    });
-
-    const saveResult = await newAddress.save();
-
-    return NextResponse.json(saveResult, { status: 201 });
-  } catch (error) {
-    console.error('Error saving address:', error);
-    return NextResponse.json(
-      { error: 'Error saving address', details: (error as Error).message },
-      { status: 500 }
-    );
-  }
-}
-
-export async function PUT(req: NextRequest) {
-  try {
-    await connectToDatabase();
-
-    const result = await getUserFromToken(req);
-    if ('error' in result) {
-      return NextResponse.json({ error: result.error }, { status: result.status });
-    }
-    const { user } = result;
-
-    const body = await req.json();
-
-    const address = await AdresseLivraison.findOneAndUpdate(
-      { _id: body._id, client: user._id }, // Ensure the user owns the address
-      body,
-      { new: true }
-    );
-
-    if (!address) {
-      return NextResponse.json({ error: 'Address not found' }, { status: 404 });
-    }
-
-    return NextResponse.json(address, { status: 200 });
-  } catch (error) {
-    console.error('Error updating address:', error);
-    return NextResponse.json(
-      { error: 'Error updating address', details: (error as Error).message },
-      { status: 500 }
-    );
-  }
-}
 
 // New GET method to retrieve addresses
 export async function GET(req: NextRequest) {

@@ -19,6 +19,8 @@ async function getUserFromToken(req: NextRequest) {
   return { user };
 }
 
+
+// New GET method to retrieve addresses
 export async function GET(req: NextRequest) {
   try {
     await connectToDatabase();
