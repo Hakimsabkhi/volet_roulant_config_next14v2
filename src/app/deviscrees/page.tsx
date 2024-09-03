@@ -120,13 +120,9 @@ const DevisCrees: React.FC = () => {
   return (
     <main className="flex justify-center h-full">
       <div className="w-[95%] h-full flex flex-col gap-8 justify-between items-center">
-        <FilterBar onFilterChange={handleFilterChange} />
+      
         <DevisTable devis={paginatedDevis} handleDelete={handleDelete} />
-        <Pagination
-          currentPage={currentPage}
-          totalPages={Math.ceil(filteredDevis.length / ITEMS_PER_PAGE)}
-          onPageChange={setCurrentPage}
-        />
+      
       </div>
     </main>
   );
