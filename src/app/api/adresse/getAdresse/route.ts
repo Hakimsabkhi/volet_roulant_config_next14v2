@@ -6,12 +6,7 @@ import { getToken } from 'next-auth/jwt';
 import User from '@/models/User';
 
 async function getUserFromToken(req: NextRequest) {
-  console.log('Request Headers:', req.headers); // Log request headers
-  console.log('Cookies:', req.cookies); // Log cookies if available
-
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  console.log('Retrieved Token:', token); // Log the token to verify its existence
-  
   if (!token) {
     return { error: 'Unauthorized', status: 401 };
   }
