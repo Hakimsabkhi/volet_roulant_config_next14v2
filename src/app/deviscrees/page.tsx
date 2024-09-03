@@ -23,19 +23,14 @@ const DevisCrees: React.FC = () => {
     year: number;
   }>();
   const [currentPage, setCurrentPage] = useState(1);
-  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${baseUrl}/api/devis/getDevis`);
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
-      }
+      const response = await fetch('/api/devis/getDevis');
       const data = await response.json();
       setDevis(data);
     } catch (error) {
       console.error("Error fetching data:", error);
-      // Optionally, display an error message to the user here
     } finally {
       setLoading(false);
     }
@@ -91,7 +86,7 @@ const DevisCrees: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      const response = await fetch(`/api/devis/deleteDevis`, {
+      const response = await fetch('/api/devis/deleteDevis', {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -130,3 +125,4 @@ const DevisCrees: React.FC = () => {
 };
 
 export default DevisCrees;
+
