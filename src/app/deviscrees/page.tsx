@@ -24,9 +24,9 @@ const DevisCrees: React.FC = () => {
   }>();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchData = async () => {
+/*   const fetchData = async () => {
     try {
-      const response = await fetch('/api/devis/getDevis');
+      const response = await fetch(`/api/devis/getDevis`);
       const data = await response.json();
       setDevis(data);
     } catch (error) {
@@ -34,13 +34,34 @@ const DevisCrees: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
-
+  }; */
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/api/devis/getDevis`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (response.ok) {
+          const data: Devis[] = await response.json();
+          setDevis(data);
+        } else {
+          console.error("Failed to fetch addresses");
+        }
+      } catch (error) {
+        console.error("Error fetching addresses:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching data
+      }
+    };
+  
     if (session) {
       fetchData();
     }
   }, [session]);
+  
 
   const handleFilterChange = (
     selectedFilter: string,
